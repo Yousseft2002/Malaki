@@ -93,7 +93,6 @@ export const checkoutDetailsSchema = z
     deliveryDate: z.iso.date({ error: "Please choose a date." }),
     recipientName: required("the recipient's name"),
     recipientPhone: phone,
-    sameAsBuyer: z.boolean().default(false),
     address: addressSchema.optional(),
     giftWrapAll: z.boolean().default(false),
     giftNote: z

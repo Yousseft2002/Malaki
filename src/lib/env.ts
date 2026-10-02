@@ -12,7 +12,8 @@ const schema = z.object({
 
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),
-  CHECKOUT_HOLD_MINUTES: z.coerce.number().int().min(30).default(60),
+  // Stripe sessions must expire 30 min – 24 h after creation; keep a margin both ways.
+  CHECKOUT_HOLD_MINUTES: z.coerce.number().int().min(31).max(1380).default(60),
 
   EMAIL_PROVIDER: z.enum(["console", "smtp"]).default("console"),
   EMAIL_FROM: z.string().default("MALAKI <orders@example.com>"),
