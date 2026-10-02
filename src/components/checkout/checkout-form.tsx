@@ -5,6 +5,7 @@ import { useEffect, useId, useMemo, useRef, useState, useTransition } from "reac
 import { getDeliveryDates, startCheckout } from "@/app/actions/checkout";
 import { Field, describedBy } from "@/components/forms/field";
 import { ButtonLink } from "@/components/ui/button";
+import { GiftBoxScene } from "@/components/ui/gift-box-scene";
 import { money } from "@/components/ui/price";
 import { STORE_LOCALE } from "@/lib/store-config";
 import { useCartQuote } from "@/lib/cart/use-cart-quote";
@@ -72,7 +73,8 @@ export function CheckoutForm({
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center gap-6 py-10 text-center">
-        <p className="text-muted">Your bag is empty.</p>
+        <GiftBoxScene variant="empty" className="mb-2 scale-75" />
+        <p className="font-display text-xl text-emerald">Your bag is empty</p>
         <ButtonLink href="/collections/gift-boxes" variant="outline">
           Shop gift boxes
         </ButtonLink>

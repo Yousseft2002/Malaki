@@ -10,7 +10,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-40 border-b border-gold/30 bg-emerald text-ivory">
       <div className="container-page flex h-16 items-center justify-between gap-4 md:h-20">
-        <div className="flex flex-1 items-center md:hidden">
+        <div className="flex flex-1 items-center lg:hidden">
           <MobileMenu />
         </div>
 
@@ -18,7 +18,7 @@ export function Header() {
           Malaki
         </Link>
 
-        <nav aria-label="Main" className="hidden flex-1 justify-center md:flex">
+        <nav aria-label="Main" className="hidden flex-1 justify-center lg:flex">
           <ul className="flex items-center gap-6 lg:gap-9">
             <li className="group relative">
               <Link href="/collections/gift-boxes" className={linkClass}>
@@ -45,7 +45,7 @@ export function Header() {
           </ul>
         </nav>
 
-        <div className="flex flex-1 items-center justify-end md:flex-none">
+        <div className="flex flex-1 items-center justify-end lg:flex-none">
           <CartButton />
         </div>
       </div>

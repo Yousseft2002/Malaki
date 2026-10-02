@@ -41,9 +41,9 @@ export function CollectionsSection({ collections }: { collections: CollectionCar
               </span>
               {/* Whole-card hit area for pointer users; the title link below is the accessible one. */}
               <Link href={`/collections/${c.slug}`} aria-hidden="true" tabIndex={-1} className="absolute inset-0 z-[1]" />
-              <div className="relative z-[2] col-start-1 row-start-1 m-4 self-end bg-ivory/95 px-5 py-5 text-center transition-transform duration-500 ease-[var(--ease-out)] group-focus-within:-translate-y-2 group-hover:-translate-y-2">
+              <div className="relative z-[2] col-start-1 row-start-1 m-4 self-end bg-ivory/95 px-5 py-5 md:m-3 md:px-3 md:py-4 lg:m-4 lg:px-5 lg:py-5 text-center transition-transform duration-500 ease-[var(--ease-out)] group-focus-within:-translate-y-2 group-hover:-translate-y-2">
                 <p className="eyebrow mb-1 text-gold-ink">Chapter {NUMERALS[i] ?? i + 1}</p>
-                <h3 className="font-display text-2xl text-emerald">
+                <h3 className="font-display text-2xl text-emerald md:text-xl lg:text-2xl">
                   <Link href={`/collections/${c.slug}`} className="inline-flex min-h-11 items-center">
                     {c.name}
                   </Link>
