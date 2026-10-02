@@ -14,6 +14,7 @@ const { createCheckout } = await import("./create-checkout");
 const { handleStripeEvent } = await import("./webhook");
 const { webhookDeps } = await import("./fulfilment");
 const { addDays, todayIn, toUtcDate } = await import("@/lib/domain/dates");
+const { checkoutDetailsSchema } = await import("@/lib/validation/schemas");
 
 const TAG = `it-${Date.now()}`;
 const EMAIL = `${TAG}@example.test`;
@@ -22,7 +23,8 @@ const deliveryDate = addDays(today, 3);
 let variantId = "";
 let ruleId = "";
 
-const details = (over: Record<string, unknown> = {}) => ({
+const details = (over: Record<string, unknown> = {}) =>
+  checkoutDetailsSchema.parse({
   buyerName: "Test Buyer",
   buyerEmail: EMAIL,
   shippingRuleId: ruleId,
@@ -31,9 +33,9 @@ const details = (over: Record<string, unknown> = {}) => ({
   address: { addressLine1: "1 Test Street", city: "London", postalCode: "SW1A 1AA", country: "GB" },
   giftWrapAll: false,
   giftNote: "Congratulations!",
-  acceptTerms: true as const,
+  acceptTerms: true,
   ...over,
-});
+  });
 
 beforeAll(async () => {
   const product = await db.product.create({
