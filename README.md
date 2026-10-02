@@ -53,6 +53,10 @@ commit `.env`; it is git-ignored. Empty values are treated as "not set".
 | `SMTP_HOST` `SMTP_PORT` `SMTP_USER` `SMTP_PASSWORD` `SMTP_SECURE` | for `smtp` | SMTP credentials from your email provider |
 | `ADMIN_EMAIL` `ADMIN_PASSWORD_HASH` `ADMIN_SESSION_SECRET` | for admin | Owner login (see below) |
 | `NEXT_PUBLIC_ANALYTICS_*` | no | Privacy-friendly analytics script (off when empty) |
+| `DATABASE_POOL_MAX` | no | Max DB connections per process; set `1` for the local `prisma dev` database, leave empty in production |
+| `ANALYTICS_SALT` | no | Secret for the daily visitor hash (falls back to `ADMIN_SESSION_SECRET`) |
+| `META_ADS_ACCESS_TOKEN` `META_AD_ACCOUNT_ID` | for the ads tracker | Read-only Meta Marketing API access, see [docs/META_ADS_SETUP.md](docs/META_ADS_SETUP.md) |
+| `META_GRAPH_API_VERSION` | no | Marketing API version (default `v25.0`) |
 | `ERROR_WEBHOOK_URL` | no | Server errors are POSTed here as JSON |
 | `LOG_LEVEL` | no | `debug` / `info` / `warn` / `error` |
 | `IMAGE_REMOTE_PATTERNS` | no | Extra allowed image hosts for `next/image` |
@@ -131,7 +135,8 @@ docs; the code relies only on the stripe-node 23.x SDK calls
 | `npm run test:e2e` | Playwright + axe: WCAG 2.2 AA scan, no horizontal scroll at 360 px, 44 px tap targets, key flows, reduced motion, no-JS, keyboard-only box building, zero console errors (needs the dev server with demo seed; first run `npx playwright install chromium`) |
 | `npm run lint` / `npm run typecheck` | ESLint / TypeScript |
 | `npm run palette:audit` | Fails on any colour outside the MALAKI palette |
-| `npx tsx scripts/screenshots.mts <dir> [paths]` | Screenshots pages at 360 / 768 / 1440 px (dev server running) |
+| `npx tsx scripts/screenshots.mts <dir> [paths]` | Screenshots pages at 360 / 768 / 1440 px (dev server running; `/admin` paths are signed in with the local `.env` admin; `SCREENSHOT_WIDTHS=360,1440` limits widths) |
+| `npm run db:seed:analytics` | **Local only.** Sample paid orders and page views over 60 days so `/admin/analytics` has something to show. Refuses to run in production or against a non-local database |
 
 ## 7. Deployment
 
@@ -265,3 +270,45 @@ the box ceremony keyframes (`sweep`, `burst`, `lid-drop`, `pop-in`).
    the reduced-motion block if it moves things (or loops).
 5. Run `npm run test:e2e` (includes reduced-motion, no-JS, keyboard and console-error checks) and
    `npm run palette:audit` (no colours outside the palette).
+
+## 11. Admin analytics
+
+`/admin/analytics` (admin only, linked from the admin nav) shows, for the last 7, 30 or 90 days:
+
+- **KPIs**: revenue, orders, average order, unique visitors, conversion rate, ad spend and ROAS,
+  each compared with the previous period.
+- **Sales per day**, **best sellers** (donut, top 5 + Other), the **Instagram/Facebook ads tracker**
+  and **visitors** (per day, top sources, top pages, mobile vs desktop). Every chart has a
+  "View as table" option, and the daily charts can be read with the arrow keys.
+
+A *sale* is an order with status PAID, PACKED or SHIPPED, dated by `paidAt`. Days are calendar
+days in `STORE_TIMEZONE` (a sale at 11 pm in Boston counts on that Boston day).
+
+### Visitors (first party, no cookies)
+
+The shop sends one beacon per page to `POST /api/track`. Nothing is sent when the browser has
+Do Not Track or Global Privacy Control on, and bots, `/admin` and `/api` paths are ignored. No IP
+address is stored and no tracking cookie is set: a visitor is a SHA-256 of a **daily** salt + IP +
+user agent, so the same person can only be recognised within one day.
+
+**Clean-up:** page views older than 13 months aren't needed and can be deleted, e.g. monthly:
+
+```sql
+DELETE FROM "PageView" WHERE "createdAt" < now() - interval '13 months';
+```
+
+### Ads: tag every Instagram ad link
+
+Orders remember where the buyer came from: on the first visit from a link with `utm_source` or
+`fbclid`, a first-party cookie (`malaki_attr`, 30 days, `SameSite=Lax`, `HttpOnly`) stores the
+campaign, and checkout saves it on the order. So **every ad's website URL must be tagged**:
+
+```
+?utm_source=instagram&utm_medium=paid&utm_campaign=<campaign name>
+```
+
+Use the exact Meta campaign name for `utm_campaign` (Ads Manager's URL parameters field accepts
+`{{campaign.name}}`). The tracker matches our orders to Meta campaigns on that name.
+
+To show spend, budgets and clicks from Meta, follow [docs/META_ADS_SETUP.md](docs/META_ADS_SETUP.md).
+Until then the section shows a "Connect Meta Ads" card, never made-up numbers.

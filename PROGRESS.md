@@ -45,3 +45,24 @@ keyframes sequence), `AnimatedCounter`, `FloatingMotif`, `AddToBagFeedback`, `Mo
 - Lighthouse mobile (production build): home 91, collection 94, product 94, box 90, enquiries 92, story 92, cart 90, checkout 91; a11y 100 and best-practices 100 everywhere; CLS 0.
 - Quality gate passed: build, lint, typecheck, 82 unit, 5 integration, 60 e2e, palette audit, secrets check. Stripe test-mode checkout NOT run end-to-end (no Stripe test keys locally) — covered by integration test with Stripe mocked.
 - Handoff given; WAITING for owner feedback. Do not push until the owner replies "approved, push it".
+
+---
+
+# Admin analytics (branch `admin-analytics`, from `main`)
+
+Owner brief (2 Oct 2026): sales chart, best-sellers donut, Meta ads tracker, visitors; first-party
+tracking; ad attribution on orders; tests; screenshots. Plan approved by the owner.
+
+- [x] 1. Schema: `PageView`; Order `utmSource/utmMedium/utmCampaign/fbclid` + `paidAt` index (two migrations)
+- [x] 2. Pure analytics functions + unit tests (time-zone edges, zero-fill, Other bucket, ÷0, ROAS "-")
+- [x] 3. `/api/track` + `PageViewBeacon` (DNT/GPC respected, bots/admin ignored, no raw IP) + tests
+- [x] 4. Checkout attribution (own commit: cookie → `createCheckout` → order) + integration test
+- [x] 5. Meta Marketing API client (v25.0, cached ~1 h, 8 s timeout, never throws) + tests + docs/META_ADS_SETUP.md
+- [x] 6. Dashboard UI: range links, KPI tiles, sales columns, donut, ads tracker, visitors; SVG charts + `ChartHover`
+- [x] 7. Sample data script, e2e (axe, keyboard chart, range links, logged-out redirect), screenshots 360/1440
+- [x] 8. README §11, DECISIONS 30–45, quality gate
+
+## Log
+
+- Dev server had to be restarted after the migration (it held the old Prisma client: `db.pageView` undefined).
+- Screenshots checked at 360 and 1440 px: no overlapping labels, no sideways scroll; KPI tiles two per row on phones.

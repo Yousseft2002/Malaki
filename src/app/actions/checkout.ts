@@ -1,6 +1,7 @@
 "use server";
 
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
+import { ATTRIBUTION_COOKIE, parseAttribution } from "@/lib/analytics/track";
 import { addDays, todayIn } from "@/lib/domain/dates";
 import { priceCart } from "@/lib/domain/pricing";
 import { type DateOption, availableDeliveryDates } from "@/lib/domain/shipping";
@@ -57,7 +58,8 @@ export async function startCheckout(input: unknown): Promise<CheckoutResult> {
   }
 
   try {
-    return await createCheckout(parsed.data.lines, parsed.data.details);
+    const attribution = parseAttribution((await cookies()).get(ATTRIBUTION_COOKIE)?.value);
+    return await createCheckout(parsed.data.lines, parsed.data.details, attribution);
   } catch (err) {
     logger.error("checkout.failed", { err });
     return { ok: false, message: "Something went wrong. Your card has not been charged — please try again." };

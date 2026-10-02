@@ -6,12 +6,15 @@ export function formatMoney(
   cents: number | null | undefined,
   currency: string,
   locale = "en-US",
+  /** Round to whole units ("$1,250"), e.g. for chart axes. */
+  options: { wholeUnits?: boolean } = {},
 ): string {
   if (cents === null || cents === undefined) return PRICE_PLACEHOLDER;
   return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currency.toUpperCase(),
-  }).format(cents / 100);
+    ...(options.wholeUnits ? { maximumFractionDigits: 0, minimumFractionDigits: 0 } : {}),
+  }).format(options.wholeUnits ? Math.round(cents / 100) : cents / 100);
 }
 
 export function isValidPrice(cents: unknown): cents is number {

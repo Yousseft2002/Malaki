@@ -3,6 +3,7 @@ import { logout } from "@/app/admin/actions/auth";
 
 const LINKS = [
   { href: "/admin", label: "Dashboard" },
+  { href: "/admin/analytics", label: "Analytics" },
   { href: "/admin/orders", label: "Orders" },
   { href: "/admin/products", label: "Products" },
   { href: "/admin/box-items", label: "Box items" },

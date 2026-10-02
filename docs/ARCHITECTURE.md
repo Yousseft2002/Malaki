@@ -41,6 +41,8 @@ src/
     actions/             public server actions: cart quote, delivery dates, checkout, enquiry, newsletter
     api/
       stripe/webhook     Stripe webhook (raw body, signature verified)
+      track              first-party page-view beacon (write-only, always 204)
+    admin/(protected)/analytics   sales, best sellers, Meta ads, visitors (admin only)
     admin/(protected)/orders/export   CSV export (admin only)
     sitemap.ts, robots.ts
   components/
@@ -51,7 +53,9 @@ src/
     orders/              create checkout session, handle webhook events
     email/               provider interface, providers, templates
     auth/                admin session (signed cookie) + password hashing
-    queries/             catalogue / order queries
+    queries/             catalogue / order / analytics queries
+    analytics/           pure analytics functions, page-view tracking + ad-attribution cookie
+    ads/                 Meta Marketing API client (server-only, read-only)
     db.ts env.ts logger.ts rate-limit.ts spam.ts stripe.ts money.ts
   proxy.ts               guards /admin (session cookie check)
   instrumentation.ts     server error reporting hook

@@ -1,6 +1,7 @@
 import { AnnouncementBar } from "@/components/layout/announcement-bar";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
+import { PageViewBeacon } from "@/components/layout/page-view-beacon";
 import { getStoreSettings } from "@/lib/queries/catalog";
 
 // Storefront pages read the database on each request so admin edits appear
@@ -23,6 +24,7 @@ export default async function ShopLayout({ children }: { children: React.ReactNo
         {children}
       </main>
       <Footer />
+      <PageViewBeacon />
     </>
   );
 }

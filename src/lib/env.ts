@@ -31,6 +31,20 @@ const schema = z.object({
   ADMIN_PASSWORD_HASH: z.string().optional(),
   ADMIN_SESSION_SECRET: z.string().optional(),
 
+  // First-party visitor counting. Falls back to ADMIN_SESSION_SECRET when unset.
+  ANALYTICS_SALT: z.string().optional(),
+
+  // Meta (Instagram) ads, read-only. See docs/META_ADS_SETUP.md.
+  META_ADS_ACCESS_TOKEN: z.string().optional(),
+  META_AD_ACCOUNT_ID: z
+    .string()
+    .regex(/^act_d+$/, "must look like act_1234567890")
+    .optional(),
+  META_GRAPH_API_VERSION: z
+    .string()
+    .regex(/^vd+.d+$/, "must look like v24.0")
+    .optional(),
+
   ERROR_WEBHOOK_URL: z.url().optional(),
   LOG_LEVEL: z.enum(["debug", "info", "warn", "error"]).default("info"),
 });

@@ -61,3 +61,60 @@ Choices made without asking, during the solo run. ★ = would like the owner's i
     (`htmlLimitedBots: /.*/`) would trade speed for that score — left at the default.
 25. **/preview-screenshots is git-ignored** — the final screenshots are saved there for review but not committed (binary files would bloat the repo).
 26. **Phone testing over Wi-Fi works in dev**: `allowedDevOrigins` allows private network addresses (dev only), and the cart no longer depends on `crypto.randomUUID` (missing on plain-http LAN addresses) — a real bug found while preparing the phone link.
+
+## Admin analytics (branch `admin-analytics`)
+
+Numbered from 30 because items 27–29 are on the `royal-experience` branch.
+
+30. **Separate page `/admin/analytics`, linked from the admin nav**, not tiles under `/admin`. The
+    dashboard is the daily packing/shipping screen and should stay instant; analytics has a date
+    range, a slow third party (Meta) and four chart sections that would bury the operational tiles
+    on a phone.
+31. **Branched from `main`, not `fun-rework`.** By the time this started, `fun-rework` had been
+    merged to `main` (PR #3) at the owner's request, including the `DATABASE_POOL_MAX` change in
+    `src/lib/db.ts` / `.env.example` (those were the agent's changes, not the owner's).
+32. **Days are grouped in TypeScript, not SQL.** Rows for the two periods are loaded once and bucketed
+    with `todayIn(STORE_TIMEZONE)`, which is unit-tested on the 11 pm-Boston and DST edges. Fine for
+    a small shop's volumes; switch to `AT TIME ZONE` grouping in SQL if page views reach millions.
+33. **Migrations were generated with `prisma migrate diff`**, not `migrate dev`: locally the
+    `prisma dev` database lives in `template1`, so `migrate dev`'s shadow database is a copy that
+    already has every table and fails. The SQL is identical to what `migrate dev` would write
+    (`20261002150000_page_views`, `20261002150100_order_attribution`), additive only.
+34. **Unique visitors over a period = sum of daily uniques.** The visitor hash rotates daily (by
+    design, for privacy), so one person on three days counts three times. Same convention as
+    Plausible. The tile says "Unique visitors"; the README explains it.
+35. **Traffic sources are counted per visitor**, by the first known source of their day (utm_source,
+    else referrer host, else "Direct"), not per page view; otherwise one Instagram visitor browsing
+    ten pages would look like ten. Instagram/Facebook hosts and utm values are normalised to
+    "instagram"/"facebook".
+36. **The attribution cookie is set by `/api/track`'s response**, not by `proxy.ts`, so the proxy
+    stays admin-only and nothing runs on every request. It is `HttpOnly` (checkout reads it on the
+    server), first touch wins, and it's only set for visits arriving with `utm_source`/`fbclid`.
+    Visitors with Do Not Track / GPC send no beacon, so they get no cookie and their orders are
+    not attributed; that's the privacy-respecting trade-off.
+37. **Ad revenue/ROAS use our own orders, matched on `utm_campaign` = Meta campaign name**
+    (case-insensitive). Meta's own reported purchases are shown as a separate, labelled line.
+38. **Budget bar:** for a daily budget, the period budget is daily × days the campaign ran inside
+    the range; for a lifetime budget, the bar compares the period's spend with the lifetime
+    budget and says so in words. Campaigns budgeted at ad-set level show spend only.
+39. **Meta field units were checked in the Marketing API reference (v25.0)**: budgets are integer
+    currency sub-units; spend/cpc/cpm are decimal strings in account currency; purchases use
+    `omni_purchase` (falling back to `purchase`, then the pixel purchase). If the ad account's
+    currency differs from the store's, the tracker says so.
+40. **Caching:** this app doesn't enable Cache Components, so per the Next 16 guide
+    ("caching without Cache Components") Meta calls use `fetch(..., { next: { revalidate: 3600 } })`.
+    The token travels in the `Authorization` header, never in a URL, and only in server code.
+41. **Chart colours** (brand tokens + `color-mix` only): emerald, gold, emerald/ivory blend,
+    gold-ink, emerald/gold blend, gold-ink/ivory blend; "Other" is a muted/sand blend. A product's
+    shade comes from a hash of its id (stable across ranges); if two visible products collide,
+    the one with the smaller id keeps it and the other takes the next free shade.
+42. **No chart library.** Charts are server-rendered SVG (stretched with non-scaling strokes; all
+    text is HTML so it stays legible at 360 px). The only client code is `ChartHover`, exposed as
+    an ARIA slider so keyboard and screen-reader users can step through days.
+43. **`formatMoney` gained an optional `{ wholeUnits }` option** for chart axes ("$1,250"); default
+    output is unchanged.
+44. **Sample data (`npm run db:seed:analytics`) uses made-up prices**, not the catalogue's, and is
+    tagged (`@analytics-sample.test`, `sample-` hashes) so a re-run replaces it. It exits unless
+    `DATABASE_URL` points at localhost and `NODE_ENV`/`VERCEL` aren't production.
+45. **The screenshot script can sign in to `/admin`** with the local `.env` admin (same signed-cookie
+    approach as the e2e tests) and accepts `SCREENSHOT_WIDTHS`.

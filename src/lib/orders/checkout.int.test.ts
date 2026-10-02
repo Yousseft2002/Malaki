@@ -94,6 +94,7 @@ describe("checkout → webhook (integration)", () => {
     sessionId = order.stripeCheckoutSessionId!;
     expect(order).toMatchObject({ status: "PENDING_PAYMENT", subtotalCents: 2000, shippingCents: 500, totalCents: 2500, capacityUnits: 2 });
     expect(order.giftOptions).toMatchObject({ recipientName: "Test Recipient", note: "Congratulations!" });
+    expect(order).toMatchObject({ utmSource: null, utmMedium: null, utmCampaign: null, fbclid: null });
 
     const params = stripeCreate.mock.calls[0]![0] as { line_items: { quantity: number; price_data: { unit_amount: number } }[]; metadata: Record<string, string> };
     expect(params.metadata.orderId).toBe(order.id);
@@ -153,5 +154,13 @@ describe("checkout → webhook (integration)", () => {
     );
     expect(outcome).toBe("cancelled");
     expect((await db.order.findUniqueOrThrow({ where: { id: pending.id } })).status).toBe("CANCELLED");
+  });
+
+  it("stores ad attribution on the order without changing its price", async () => {
+    const attribution = { utmSource: "instagram", utmMedium: "paid", utmCampaign: "eid-boxes", fbclid: "fb.1.abc" };
+    const result = await createCheckout([{ variantId, quantity: 1, giftWrap: false }], details({ deliveryDate: addDays(today, 5) }), attribution);
+    expect(result.ok).toBe(true);
+    const order = await db.order.findFirstOrThrow({ where: { buyerEmail: EMAIL, status: "PENDING_PAYMENT" } });
+    expect(order).toMatchObject({ ...attribution, subtotalCents: 1000, shippingCents: 500, totalCents: 1500 });
   });
 });
