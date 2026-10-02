@@ -3,7 +3,7 @@ const STYLES: Record<string, string> = {
   PAID: "bg-gold text-emerald-deep",
   PACKED: "bg-emerald-soft text-ivory",
   SHIPPED: "bg-emerald text-ivory",
-  CANCELLED: "bg-[#e8d5d0] text-error",
+  CANCELLED: "bg-error/15 text-error",
   NEW: "bg-gold text-emerald-deep",
   IN_PROGRESS: "bg-emerald-soft text-ivory",
   CLOSED: "bg-sand text-muted",

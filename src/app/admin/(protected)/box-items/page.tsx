@@ -27,7 +27,7 @@ export default async function AdminBoxItemsPage() {
           const key = item?.id ?? "new";
           const eligible = new Set(item?.eligibleBoxes.map((b) => b.id));
           return (
-            <section key={key} aria-label={item?.name ?? "New box item"} className="border border-sand bg-white p-5">
+            <section key={key} aria-label={item?.name ?? "New box item"} className="border border-sand bg-ivory p-5">
               {!item && <h2 className="eyebrow mb-4 text-emerald">Add a box item</h2>}
               <AdminForm action={saveBoxItem} submitLabel={item ? "Save" : "Add item"}>
                 <input type="hidden" name="id" value={item?.id ?? ""} />

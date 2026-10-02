@@ -23,7 +23,8 @@ export const getCollections = cache(async () =>
   db.collection.findMany({ where: { isActive: true }, orderBy: { sortOrder: "asc" } }),
 );
 
-const cardInclude = { variants: activeVariants, images: { ...images, take: 1 }, collection: true } as const;
+// Two images: the second is revealed on card hover/press when it exists.
+const cardInclude = { variants: activeVariants, images: { ...images, take: 2 }, collection: true } as const;
 
 export type ProductCardData = {
   slug: string;
@@ -33,6 +34,7 @@ export type ProductCardData = {
   fromPriceCents: number | null;
   hasMultiplePrices: boolean;
   image: { url: string | null; alt: string } | null;
+  secondImage: { url: string | null; alt: string } | null;
 };
 
 function toCard(p: {
@@ -52,6 +54,7 @@ function toCard(p: {
     fromPriceCents: prices.length ? Math.min(...prices) : null,
     hasMultiplePrices: new Set(prices).size > 1,
     image: p.images[0] ?? null,
+    secondImage: p.images[1] ?? null,
   };
 }
 

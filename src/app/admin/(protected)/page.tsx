@@ -27,7 +27,7 @@ export default async function AdminDashboard() {
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         {tiles.map((t) => (
           <li key={t.label}>
-            <Link href={t.href} className="block border border-sand bg-white p-5 hover:border-emerald">
+            <Link href={t.href} className="block border border-sand bg-ivory p-5 hover:border-emerald">
               <span className="block font-display text-4xl text-emerald">{t.value}</span>
               <span className="mt-1 block text-sm text-muted">{t.label}</span>
             </Link>

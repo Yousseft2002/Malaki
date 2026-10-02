@@ -105,7 +105,7 @@ export function EnquiryForm({ defaultType }: { defaultType?: string }) {
           />
           <span className="text-sm">
             I agree to MALAKI storing these details to reply to my enquiry, as described in the{" "}
-            <Link href="/legal/privacy" className="underline underline-offset-4">
+            <Link href="/legal/privacy" className="link-inline">
               privacy policy
             </Link>
             .

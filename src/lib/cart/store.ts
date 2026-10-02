@@ -59,6 +59,13 @@ function subscribe(listener: () => void) {
   };
 }
 
+// crypto.randomUUID only exists in secure contexts (https / localhost); plain-http
+// addresses such as a phone testing over Wi-Fi need a fallback.
+const newId = () =>
+  typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+    ? crypto.randomUUID()
+    : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+
 const clamp = (n: number) => Math.min(Math.max(Math.round(n), 1), MAX_LINE_QUANTITY);
 
 export const cart = {
@@ -68,7 +75,7 @@ export const cart = {
     if (existing) {
       write(items.map((i) => (i === existing ? { ...i, quantity: clamp(i.quantity + item.quantity) } : i)));
     } else {
-      write([...items, { ...item, quantity: clamp(item.quantity), id: crypto.randomUUID() }]);
+      write([...items, { ...item, quantity: clamp(item.quantity), id: newId() }]);
     }
   },
   setQuantity(id: string, quantity: number) {

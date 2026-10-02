@@ -41,7 +41,7 @@ export default async function AdminProductPage({ params }: Props) {
         )}
       </div>
 
-      <section aria-labelledby="details-title" className="mb-8 border border-sand bg-white p-5">
+      <section aria-labelledby="details-title" className="mb-8 border border-sand bg-ivory p-5">
         <h2 id="details-title" className="eyebrow mb-4 text-emerald">
           Details
         </h2>
@@ -82,7 +82,7 @@ export default async function AdminProductPage({ params }: Props) {
         </AdminForm>
       </section>
 
-      <section aria-labelledby="variants-title" className="mb-8 border border-sand bg-white p-5">
+      <section aria-labelledby="variants-title" className="mb-8 border border-sand bg-ivory p-5">
         <h2 id="variants-title" className="eyebrow mb-1 text-emerald">
           {isBox ? "Box sizes" : "Sizes, prices & stock"}
         </h2>
@@ -113,7 +113,7 @@ export default async function AdminProductPage({ params }: Props) {
         </div>
       </section>
 
-      <section aria-labelledby="images-title" className="mb-8 border border-sand bg-white p-5">
+      <section aria-labelledby="images-title" className="mb-8 border border-sand bg-ivory p-5">
         <h2 id="images-title" className="eyebrow mb-1 text-emerald">
           Images
         </h2>
@@ -139,7 +139,7 @@ export default async function AdminProductPage({ params }: Props) {
         </div>
       </section>
 
-      <section aria-labelledby="pairs-title" className="border border-sand bg-white p-5">
+      <section aria-labelledby="pairs-title" className="border border-sand bg-ivory p-5">
         <h2 id="pairs-title" className="eyebrow mb-4 text-emerald">
           Pairs well with
         </h2>

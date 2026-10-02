@@ -18,6 +18,8 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   poweredByHeader: false,
+  // Development only: let phones on the same Wi-Fi (private network addresses) load dev assets.
+  allowedDevOrigins: ["192.168.*.*", "10.*.*.*", "172.*.*.*"],
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns,

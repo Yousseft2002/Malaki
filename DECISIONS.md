@@ -1,0 +1,63 @@
+# fun-rework — decisions
+
+Choices made without asking, during the solo run. ★ = would like the owner's input.
+
+1. **Branch base.** `fun-rework` branches from `boston-localization` (PR #2, not yet merged) so the
+   redesign includes the USD / Boston changes. If PR #2 is merged first, `fun-rework` merges cleanly
+   on top of `main`.
+2. **Motion library.** `motion` (Motion for React) 13.x, MIT. Used only where CSS can't express the
+   choreography: pieces entering/leaving the box, cart items animating out, and the gold dot that
+   arcs into the bag. Everything else is CSS.
+3. **No-JS / reduced-motion safety.** Scroll reveals only hide content once JavaScript has set
+   `html[data-js]`, so content is never invisible without JS. Under `prefers-reduced-motion` reveals
+   become a plain fade-free appearance and decorative loops are switched off.
+4. **Product cards fetch two images** (`take: 2` in the card query) so a second photo can be revealed
+   on hover/press. Display-only change; no commerce logic touched.
+5. **Collection cards use an overlay link.** The visible title is the one accessible link (44px
+   target); an `aria-hidden`, untabbable overlay link makes the whole card tappable. The previous
+   stretched-link version accidentally hid the caption behind the image.
+6. **Collections are "chapters"** (I, II, III) — numbering is decorative (`aria-hidden`).
+7. **Hero caption card links to The Malaki Box** (an existing product) — it names a real product,
+   makes no claims.
+8. ★ **Gifting tiles now link to the enquiry form with the type preselected** (Weddings / Events /
+   Corporate).
+9. **Add-to-bag sequence waits for the flight.** The item is added when the gold piece lands
+   (~0.65s) so the count bump and drawer follow the animation; instant under reduced motion. The
+   role="status" message is unchanged.
+10. **Add-to-bag button shows the line total** ("Add to bag | $2.00") so it reads as the page's main
+    action. Prices still come from the server when the cart is quoted.
+11. **Product "Available" label** reflects stock > 0 only — no stock counts or scarcity claims.
+12. ★ **Gift-wrap description** is a placeholder (`[GIFT WRAP DESCRIPTION]`) shown when wrapping is
+    free — I didn't want to invent what the wrapping looks like.
+13. **Accordions animate to `height: auto`** with `::details-content` + `interpolate-size` where the
+    browser supports it (Chrome/Edge today); elsewhere they open instantly, and the content always
+    fades/rises in. This is the one place height animates, because opening a section must push the
+    content below it down.
+14. ★ **Box pieces are illustrated "sweets", not photos.** Box items have no image field and adding one
+    would be a schema change (out of scope), so each kind of piece gets an embossed palette finish
+    (six finishes, by list position). Easy to swap for photos later by adding an image to BoxItem.
+15. **Placement order is visual state only.** The builder remembers the order pieces were placed so
+    each lands in its own slot; the selection (and all rules/pricing) is unchanged.
+16. **Completed box closes its lid** (with a "Peek inside" toggle to reopen). Removing a piece reopens
+    it automatically.
+17. **Pulses are finite** (three gentle beats), so nothing loops forever or distracts.
+18. **Mobile box**: a pinned bar (progress stars, count, total) opens a bottom sheet with the full
+    box, totals and Add to bag. Page has bottom padding so the bar never covers content.
+19. **Loading skeletons only on collection and product pages.** A skeleton boundary at the shop root
+    would leave no-JavaScript visitors looking at a skeleton (streamed content needs a tiny script to
+    swap in). Collection/product pages are where navigation waits on data, so they get the shimmer.
+20. **JS gate uses `next/script` `beforeInteractive`** (an inline `<script>` in the layout triggered a
+    React warning). It still runs before hydration.
+21. **Playwright runs with one worker** — the local Prisma dev database drops connections under
+    parallel load. Production Postgres is unaffected.
+22. **Tablets (768–1023px) use the phone layouts** for the header (hamburger), product page
+    (stacked, swipe gallery) and box builder (pinned bar) — the desktop versions were cramped there.
+23. **Motion loads only where it's used.** The cart drawer is loaded on first open, the product page
+    uses a CSS transition for the size highlight, and reduced-motion config sits inside each Motion
+    island instead of the root layout. This took Lighthouse mobile performance from 88–91 to 90–94.
+24. **Lighthouse SEO notes (not bugs):** cart/checkout score 63 because they are intentionally
+    `noindex`. Collection/product score 91 because Next.js streams `generateMetadata` output into
+    `<body>` (documented Next.js 16 behaviour; Google reads the full DOM). Turning streaming off
+    (`htmlLimitedBots: /.*/`) would trade speed for that score — left at the default.
+25. **/preview-screenshots is git-ignored** — the final screenshots are saved there for review but not committed (binary files would bloat the repo).
+26. **Phone testing over Wi-Fi works in dev**: `allowedDevOrigins` allows private network addresses (dev only), and the cart no longer depends on `crypto.randomUUID` (missing on plain-http LAN addresses) — a real bug found while preparing the phone link.

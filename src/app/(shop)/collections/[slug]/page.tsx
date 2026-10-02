@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { FloatingMotif } from "@/components/motion/floating-motif";
 import { ProductGrid } from "@/components/product/product-card";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SectionHeading } from "@/components/ui/section-heading";
@@ -22,12 +23,19 @@ export default async function CollectionPage({ params }: Props) {
   if (!collection) notFound();
 
   return (
-    <div className="container-page py-10 md:py-16">
-      <Breadcrumbs items={[{ href: "/", label: "Home" }, { label: collection.name }]} />
-      <div className="mt-8 mb-14">
-        <SectionHeading as="h1" eyebrow="Collection" title={collection.name} intro={collection.description ?? undefined} />
+    <>
+      <section className="relative overflow-hidden border-b border-hairline bg-sand">
+        <FloatingMotif density="light" className="opacity-50" />
+        <div className="container-page relative pt-6 pb-14 md:pb-20">
+          <Breadcrumbs items={[{ href: "/", label: "Home" }, { label: collection.name }]} />
+          <div className="mt-8">
+            <SectionHeading as="h1" eyebrow="Collection" title={collection.name} intro={collection.description ?? undefined} />
+          </div>
+        </div>
+      </section>
+      <div className="container-page py-14 md:py-20">
+        <ProductGrid products={collection.products} headingLevel="h2" />
       </div>
-      <ProductGrid products={collection.products} headingLevel="h2" />
-    </div>
+    </>
   );
 }

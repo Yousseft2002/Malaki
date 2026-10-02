@@ -8,6 +8,8 @@ export default defineConfig({
   testDir: "e2e",
   timeout: 60_000,
   fullyParallel: false,
+  // One browser at a time: the local Prisma dev database handles few concurrent connections.
+  workers: 1,
   reporter: [["list"]],
   use: { baseURL, trace: "retain-on-failure" },
   projects: [

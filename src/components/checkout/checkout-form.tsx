@@ -5,6 +5,7 @@ import { useEffect, useId, useMemo, useRef, useState, useTransition } from "reac
 import { getDeliveryDates, startCheckout } from "@/app/actions/checkout";
 import { Field, describedBy } from "@/components/forms/field";
 import { ButtonLink } from "@/components/ui/button";
+import { GiftBoxScene } from "@/components/ui/gift-box-scene";
 import { money } from "@/components/ui/price";
 import { STORE_LOCALE } from "@/lib/store-config";
 import { useCartQuote } from "@/lib/cart/use-cart-quote";
@@ -72,7 +73,8 @@ export function CheckoutForm({
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center gap-6 py-10 text-center">
-        <p className="text-muted">Your bag is empty.</p>
+        <GiftBoxScene variant="empty" className="mb-2 scale-75" />
+        <p className="font-display text-xl text-emerald">Your bag is empty</p>
         <ButtonLink href="/collections/gift-boxes" variant="outline">
           Shop gift boxes
         </ButtonLink>
@@ -143,7 +145,7 @@ export function CheckoutForm({
     <form onSubmit={onSubmit} noValidate className="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
       <div className="flex flex-col gap-10">
         {(formError || quoteError) && (
-          <div ref={summaryRef} tabIndex={-1} role="alert" className="border border-error bg-white p-4 text-error focus:outline-2">
+          <div ref={summaryRef} tabIndex={-1} role="alert" className="border border-error bg-ivory p-4 text-error focus:outline-2">
             <p className="font-medium">{formError ?? quoteError}</p>
             {fieldErrorList.length > 0 && (
               <ul className="mt-2 list-disc pl-5 text-sm">
@@ -330,11 +332,11 @@ export function CheckoutForm({
             />
             <span>
               I agree to the{" "}
-              <Link href="/legal/terms" className="underline underline-offset-4" target="_blank">
+              <Link href="/legal/terms" className="link-inline" target="_blank">
                 terms &amp; conditions
               </Link>{" "}
               and have read the{" "}
-              <Link href="/legal/allergens" className="underline underline-offset-4" target="_blank">
+              <Link href="/legal/allergens" className="link-inline" target="_blank">
                 allergen information
               </Link>
               .

@@ -27,7 +27,7 @@ export function Footer() {
                 <ul>
                   {col.links.map((l) => (
                     <li key={l.href}>
-                      <Link href={l.href} className="inline-flex min-h-11 items-center text-sand hover:text-gold">
+                      <Link href={l.href} className="inline-flex min-h-11 items-center text-sand transition-colors hover:text-gold link-gold link-gold-accent [--underline-offset:11px]">
                         {l.label}
                       </Link>
                     </li>

@@ -128,8 +128,10 @@ docs; the code relies only on the stripe-node 23.x SDK calls
 | --- | --- |
 | `npm test` | Unit tests: box rules, pricing, shipping & capacity, webhook handling, Stripe signature verification, emails, admin parsers, CSV, auth, rate limiting, spam checks |
 | `npm run test:integration` | Checkout → webhook against a real database with Stripe mocked. **Uses `DATABASE_URL` — point it at a dev database** |
-| `npm run test:e2e` | Playwright + axe: WCAG 2.2 AA scan, no horizontal scroll at 360 px, 44 px tap targets, key flows (needs the dev server with demo seed; first run `npx playwright install chromium`) |
+| `npm run test:e2e` | Playwright + axe: WCAG 2.2 AA scan, no horizontal scroll at 360 px, 44 px tap targets, key flows, reduced motion, no-JS, keyboard-only box building, zero console errors (needs the dev server with demo seed; first run `npx playwright install chromium`) |
 | `npm run lint` / `npm run typecheck` | ESLint / TypeScript |
+| `npm run palette:audit` | Fails on any colour outside the MALAKI palette |
+| `npx tsx scripts/screenshots.mts <dir> [paths]` | Screenshots pages at 360 / 768 / 1440 px (dev server running) |
 
 ## 7. Deployment
 
@@ -168,6 +170,7 @@ src/app/admin/       login + protected admin pages and server actions
 src/app/actions/     public server actions (cart quote, checkout, enquiry, newsletter)
 src/app/api/         Stripe webhook
 src/components/      UI by area: layout, ui, home, product, cart, box-builder, checkout, forms, admin
+src/components/motion/  motion tokens + primitives (see §10)
 src/lib/domain/      pure business rules + unit tests (box, pricing, shipping, capacity, dates, money)
 src/lib/orders/      checkout creation, webhook handling, fulfilment
 src/lib/email/       EmailProvider interface, console + SMTP providers, templates
@@ -206,3 +209,59 @@ docs/                architecture, licences
   `/admin`, checked in `proxy.ts` *and* in every admin page/action/route.
 - **Dynamic rendering** for database pages: edits appear immediately and the
   build never needs a database.
+
+## 10. Motion system
+
+One motion personality across the site — smooth, elegant, slightly bouncy — defined in one place and
+built from a few primitives. Everything animates **transform and opacity only**, respects
+`prefers-reduced-motion`, and never hides content when JavaScript is off.
+
+### Tokens
+
+`src/components/motion/tokens.ts` (for Motion/JS) mirrored as CSS custom properties in
+`src/app/globals.css` (`:root`). Keep the two in sync.
+
+| Token | JS (`tokens.ts`) | CSS | Use |
+| --- | --- | --- | --- |
+| Durations | `duration.instant/fast/base/slow/reveal/ceremony` (0.12–1.1 s) | `--dur-*` | press → hover → panels → reveals → box ceremony |
+| Easings | `ease.out`, `ease.inOut`, `ease.bounce`, `ease.spring` | `--ease-*` | settle, shimmer, playful overshoot, drawer spring |
+| Springs | `spring.soft`, `spring.bouncy`, `spring.drawer` | — | Motion springs (box pieces) |
+| Stagger | `stagger.tight/base/loose` (40/70/120 ms) | `--stagger-*` | lists, cards, hero sequence |
+
+### Primitives (`src/components/motion/`)
+
+| Primitive | Kind | What it does |
+| --- | --- | --- |
+| `Reveal` | client island | Adds `[data-inview]` once when scrolled into view → `.reveal` rises/fades in. Server children pass through. |
+| `Stagger` | client island | Same, but its children enter one after another (`.stagger`, nth-child delays). |
+| `InView` | client island | Only flags `[data-inview]` — for custom choreography (star dividers, arch reveal). |
+| `PageIntro` + `introStep(n)` | server, CSS | Entrance sequence on first paint, before hydration (hero, product title). |
+| `InteractiveButton` (`Button` / `ButtonLink`) | CSS `.btn-tactile` | Lifts on hover, arrow slides, gold light sweep, compresses on press. |
+| `HoverLift` | CSS `.hover-lift` | Card lift on hover/focus, press-down on tap. |
+| `AnimatedCounter` | client | Number rolls up/down on change (cart badge, quantities). |
+| `FloatingMotif` | server, CSS | Low-opacity gold zellige pattern + glinting stars (hero, gifting, collections). |
+| `AddToBagButton` / `flyToBag()` | client, Web Animations API | Press → gold piece arcs into the bag (`[data-bag-target]`) → item added → count bumps → drawer opens → ✓. |
+| `JS_GATE_SCRIPT` | root layout | Sets `html[data-js]`; reveal styles only hide content under it. |
+
+Motion (Motion for React, MIT) is used **only** where CSS can't express the choreography: pieces
+entering/leaving the build-your-own box and cart items animating out. Those components wrap
+themselves in `<MotionConfig reducedMotion="user">`, and the library is only loaded on pages (or
+interactions — the cart drawer is lazy) that use it.
+
+Other named effects live in `globals.css`: `.star-divider` (hairlines grow from the centre, star turns
+in), `.link-gold` (underline grows from the centre), `.arch-reveal` (curtain lifts out of an arch),
+`.shimmer` (gold skeletons), `dialog.sheet` (spring slide-in), accordions (`::details-content`), and
+the box ceremony keyframes (`sweep`, `burst`, `lid-drop`, `pop-in`).
+
+### Adding a new animation
+
+1. Prefer CSS. Use the tokens (`var(--dur-base) var(--ease-out)`), animate only `transform` /
+   `opacity`, and give every hover effect a `:focus-visible` / `:active` (tap) equivalent.
+2. For "appear on scroll", wrap the element in `<Reveal>` / `<Stagger>` — don't make the section a
+   client component.
+3. Need enter/exit or layout choreography? Use Motion inside a small client component wrapped in
+   `<MotionConfig reducedMotion="user">`, with values from `tokens.ts`.
+4. Check reduced motion: the global rule in `globals.css` makes durations instant; add your class to
+   the reduced-motion block if it moves things (or loops).
+5. Run `npm run test:e2e` (includes reduced-motion, no-JS, keyboard and console-error checks) and
+   `npm run palette:audit` (no colours outside the palette).

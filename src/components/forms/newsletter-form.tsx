@@ -36,22 +36,22 @@ export function NewsletterForm({ source = "footer", tone = "dark" }: { source?: 
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : undefined}
           className={`min-h-11 flex-1 border px-4 py-2 ${
-            dark ? "border-gold/60 bg-emerald-deep text-ivory placeholder:text-sand/70" : "border-[#857a63] bg-white text-ink"
+            dark ? "border-gold/60 bg-emerald-deep text-ivory placeholder:text-sand/70" : "border-line bg-ivory text-ink"
           }`}
           placeholder="you@example.com"
         />
         <button
           type="submit"
           disabled={pending}
-          className={`min-h-11 px-6 text-xs font-medium tracking-[0.2em] uppercase disabled:opacity-60 ${
-            dark ? "bg-gold text-emerald-deep hover:bg-[#d6b45f]" : "bg-emerald text-ivory hover:bg-emerald-deep"
+          className={`btn-tactile min-h-11 px-6 text-xs font-medium tracking-[0.2em] uppercase disabled:opacity-60 ${
+            dark ? "btn-gold-surface bg-gold text-emerald-deep" : "bg-emerald text-ivory hover:bg-emerald-deep"
           }`}
         >
           {pending ? "Joining…" : "Join"}
         </button>
       </div>
       {error && (
-        <p id={`${id}-error`} role="alert" className={`mt-2 text-sm ${dark ? "text-[#f3b7a8]" : "text-error"}`}>
+        <p id={`${id}-error`} role="alert" className={`mt-2 text-sm ${dark ? "text-ivory" : "text-error"}`}>
           {error}
         </p>
       )}

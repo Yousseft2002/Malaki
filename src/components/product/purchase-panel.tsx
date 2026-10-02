@@ -2,11 +2,12 @@
 
 import { useId, useState } from "react";
 import { QuantityStepper } from "@/components/cart/quantity-stepper";
-import { Button } from "@/components/ui/button";
-import { Price, money } from "@/components/ui/price";
+import { AddToBagButton } from "@/components/motion/add-to-bag-feedback";
+import { money } from "@/components/ui/price";
 import { cartDrawer } from "@/lib/cart/drawer";
 import { cart } from "@/lib/cart/store";
 import { GIFT_NOTE_MAX } from "@/lib/domain/pricing";
+import { GiftBoxPreview, GiftNoteCard } from "./gift-preview";
 
 export type PanelVariant = { id: string; name: string; priceCents: number | null; stock: number };
 
@@ -24,7 +25,7 @@ export function PurchasePanel({
   const [quantity, setQuantity] = useState(1);
   const [giftWrap, setGiftWrap] = useState(false);
   const [giftNote, setGiftNote] = useState("");
-  const [added, setAdded] = useState(false);
+  const [status, setStatus] = useState("");
 
   const variant = variants.find((v) => v.id === variantId);
   if (!variant) return <p className="text-muted">This product is not available right now.</p>;
@@ -33,6 +34,7 @@ export function PurchasePanel({
   const unpriced = variant.priceCents === null;
   const maxQty = Math.max(1, Math.min(variant.stock, 20));
   const remaining = GIFT_NOTE_MAX - giftNote.length;
+  const lineTotal = variant.priceCents === null ? null : variant.priceCents * Math.min(quantity, maxQty);
 
   function addToBag() {
     if (!variant || soldOut || unpriced) return;
@@ -48,65 +50,86 @@ export function PurchasePanel({
       giftWrap,
       giftNote: giftNote.trim() || undefined,
     });
-    setAdded(true);
+    setStatus(`${product.name} added to your bag.`);
     cartDrawer.open();
   }
 
   return (
-    <div className="flex flex-col gap-7">
-      <Price cents={variant.priceCents} className="font-display text-2xl text-emerald" />
+    <div className="flex flex-col gap-8">
+      {/* Price: rolls softly when the size changes */}
+      <div className="flex items-baseline justify-between gap-4">
+        <p className="overflow-hidden font-display text-3xl text-emerald sm:text-4xl" aria-live="polite">
+          <span key={variant.id} className="num-roll-up inline-block">
+            {money(variant.priceCents)}
+          </span>
+        </p>
+        <p className={`eyebrow ${soldOut ? "text-error" : "text-gold-ink"}`}>{soldOut ? "Sold out" : unpriced ? "Coming soon" : "Available"}</p>
+      </div>
 
       {variants.length > 1 && (
         <fieldset>
-          <legend className="eyebrow mb-3 text-emerald">Box size</legend>
-          <div className="flex flex-wrap gap-3">
-            {variants.map((v) => (
-              <label
-                key={v.id}
-                className={`flex min-h-11 cursor-pointer items-center gap-2 border px-4 py-2 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-emerald ${
-                  v.id === variantId ? "border-emerald bg-emerald text-ivory" : "border-[#857a63] text-ink hover:border-emerald"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name={`${id}-variant`}
-                  value={v.id}
-                  checked={v.id === variantId}
-                  onChange={() => {
-                    setVariantId(v.id);
-                    setQuantity(1);
-                    setAdded(false);
-                  }}
-                  className="sr-only"
-                />
-                <span>{v.name}</span>
-                {v.stock <= 0 && <span className="text-xs opacity-80">(sold out)</span>}
-              </label>
-            ))}
-          </div>
+          <legend className="eyebrow mb-3 text-emerald">Choose your box</legend>
+            <div className="grid grid-cols-2 gap-3">
+              {variants.map((v, i) => {
+                const selected = v.id === variantId;
+                return (
+                  <label
+                    key={v.id}
+                    className={`relative isolate flex min-h-24 cursor-pointer flex-col items-center justify-end gap-2 border px-3 pt-3 pb-3 text-center transition-[transform,border-color,background-color] duration-300 active:scale-[0.97] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-emerald ${
+                      selected ? "border-emerald bg-emerald" : "border-line hover:border-emerald"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name={`${id}-variant`}
+                      value={v.id}
+                      checked={selected}
+                      onChange={() => {
+                        setVariantId(v.id);
+                        setQuantity(1);
+                        setStatus("");
+                      }}
+                      className="sr-only"
+                    />
+                    {/* A box that grows with the size */}
+                    <span aria-hidden="true" className="flex items-end">
+                      <span
+                        className={`block border transition-transform duration-500 ease-[var(--ease-bounce)] ${selected ? "-translate-y-1 border-gold bg-emerald-deep" : "border-gold-ink/60 bg-sand"}`}
+                        style={{ width: 22 + i * 12, height: 14 + i * 6 }}
+                      />
+                    </span>
+                    <span className={`font-display text-lg leading-tight ${selected ? "text-ivory" : "text-emerald"}`}>{v.name}</span>
+                    <span className={`text-sm ${selected ? "text-sand" : "text-muted"}`}>{v.stock <= 0 ? "Sold out" : money(v.priceCents)}</span>
+                  </label>
+                );
+              })}
+            </div>
         </fieldset>
       )}
 
-      <div>
-        <p className="eyebrow mb-3 text-emerald" id={`${id}-qty`}>
-          Quantity
-        </p>
+      <div className="flex items-center justify-between gap-4">
+        <p className="eyebrow text-emerald">Quantity</p>
         <QuantityStepper value={quantity} onChange={setQuantity} max={maxQty} label="Quantity" />
       </div>
 
-      <div className="flex flex-col gap-4 border-y border-sand py-6">
-        <label className="flex min-h-11 cursor-pointer items-center gap-3">
-          <input
-            type="checkbox"
-            checked={giftWrap}
-            onChange={(e) => setGiftWrap(e.target.checked)}
-            className="h-5 w-5 accent-emerald"
-          />
-          <span>
-            Gift wrap{giftWrapPriceCents > 0 && <span className="text-muted"> (+{money(giftWrapPriceCents)} each)</span>}
-          </span>
-        </label>
-        <div>
+      {/* Gifting */}
+      <div className="border-y border-hairline py-6">
+        <div className="flex items-center gap-5">
+          <GiftBoxPreview wrapped={giftWrap} />
+          <label className="flex min-h-11 flex-1 cursor-pointer items-center justify-between gap-3">
+            <span>
+              <span className="block font-display text-lg text-emerald">Gift wrap</span>
+              <span className="text-sm text-muted">{giftWrapPriceCents > 0 ? `+${money(giftWrapPriceCents)} each` : "[GIFT WRAP DESCRIPTION]"}</span>
+            </span>
+            <input type="checkbox" role="switch" checked={giftWrap} onChange={(e) => setGiftWrap(e.target.checked)} className="peer sr-only" />
+            <span
+              aria-hidden="true"
+              className="relative h-7 w-12 shrink-0 rounded-full bg-muted/60 transition-colors duration-300 peer-checked:bg-emerald peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-emerald after:absolute after:top-1 after:left-1 after:h-5 after:w-5 after:rounded-full after:bg-ivory after:shadow after:transition-transform after:duration-300 after:ease-[var(--ease-bounce)] peer-checked:after:translate-x-5"
+            />
+          </label>
+        </div>
+
+        <div className="mt-6">
           <label htmlFor={`${id}-note`} className="mb-1.5 block text-sm font-medium">
             Gift note <span className="font-normal text-muted">(optional)</span>
           </label>
@@ -123,15 +146,26 @@ export function PurchasePanel({
           <p id={`${id}-note-count`} className="mt-1 text-right text-sm text-muted" aria-live={remaining <= 20 ? "polite" : "off"}>
             {remaining} characters left
           </p>
+          <GiftNoteCard note={giftNote} />
         </div>
       </div>
 
       <div>
-        <Button onClick={addToBag} disabled={soldOut || unpriced} className="w-full">
-          {soldOut ? "Sold out" : unpriced ? "Coming soon" : "Add to bag"}
-        </Button>
+        <AddToBagButton onAdd={addToBag} disabled={soldOut || unpriced} className="w-full" addedLabel="Added to your bag">
+          {soldOut ? (
+            "Sold out"
+          ) : unpriced ? (
+            "Coming soon"
+          ) : (
+            <span className="inline-flex items-center gap-3">
+              Add to bag
+              <span aria-hidden="true" className="h-4 w-px bg-ivory/40" />
+              <span className="tracking-normal normal-case">{money(lineTotal)}</span>
+            </span>
+          )}
+        </AddToBagButton>
         <p role="status" className="mt-3 min-h-6 text-center text-sm text-emerald">
-          {added ? `${product.name} added to your bag.` : ""}
+          {status}
         </p>
       </div>
     </div>

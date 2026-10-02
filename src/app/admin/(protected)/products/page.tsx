@@ -18,7 +18,7 @@ export default async function AdminProductsPage() {
   return (
     <>
       <h1 className="mb-6 text-3xl text-emerald">Products</h1>
-      <div className="mb-10 overflow-x-auto border border-sand bg-white">
+      <div className="mb-10 overflow-x-auto border border-sand bg-ivory">
         <table className="w-full min-w-[640px] text-left text-sm">
           <thead className="bg-sand">
             <tr>
@@ -55,7 +55,7 @@ export default async function AdminProductsPage() {
         </table>
       </div>
 
-      <section aria-labelledby="new-product" className="max-w-xl border border-sand bg-white p-5">
+      <section aria-labelledby="new-product" className="max-w-xl border border-sand bg-ivory p-5">
         <h2 id="new-product" className="eyebrow mb-4 text-emerald">
           New product
         </h2>

@@ -5,6 +5,7 @@ import { GiftingBand } from "@/components/home/gifting-band";
 import { Hero } from "@/components/home/hero";
 import { StorySection } from "@/components/home/story-section";
 import { ProductGrid } from "@/components/product/product-card";
+import { Reveal } from "@/components/motion/reveal";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getCollections, getSignatureProducts } from "@/lib/queries/catalog";
 import { jsonLdScript } from "@/lib/seo";
@@ -37,9 +38,9 @@ export default async function HomePage() {
       <section aria-labelledby="newsletter-title" className="py-20 md:py-24">
         <div className="container-page flex flex-col items-center text-center">
           <SectionHeading id="newsletter-title" eyebrow="Newsletter" title="First to know" intro="[NEWSLETTER PITCH — new collections, seasonal boxes, order deadlines]" />
-          <div className="mt-10 flex w-full justify-center text-left">
+          <Reveal className="mt-10 flex w-full justify-center text-left">
             <NewsletterForm source="homepage" tone="light" />
-          </div>
+          </Reveal>
         </div>
       </section>
     </>

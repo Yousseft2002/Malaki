@@ -40,3 +40,6 @@ src/generated/
 # Playwright
 test-results/
 playwright-report/
+
+# Local visual review screenshots (kept out of git)
+preview-screenshots/

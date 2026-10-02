@@ -41,7 +41,7 @@ export default async function AdminShippingPage() {
     <>
       <h1 className="mb-8 text-3xl text-emerald">Shipping &amp; capacity</h1>
 
-      <section aria-labelledby="settings-title" className="mb-10 border border-sand bg-white p-5">
+      <section aria-labelledby="settings-title" className="mb-10 border border-sand bg-ivory p-5">
         <h2 id="settings-title" className="eyebrow mb-4 text-emerald">
           Store settings
         </h2>
@@ -61,7 +61,7 @@ export default async function AdminShippingPage() {
         </AdminForm>
       </section>
 
-      <section aria-labelledby="capacity-title" className="mb-10 border border-sand bg-white p-5">
+      <section aria-labelledby="capacity-title" className="mb-10 border border-sand bg-ivory p-5">
         <h2 id="capacity-title" className="eyebrow mb-1 text-emerald">
           Capacity overrides
         </h2>
@@ -108,7 +108,7 @@ export default async function AdminShippingPage() {
         {[...rules, null].map((r) => {
           const key = r?.id ?? "new";
           return (
-            <section key={key} aria-label={r?.name ?? "New shipping option"} className="border border-sand bg-white p-5">
+            <section key={key} aria-label={r?.name ?? "New shipping option"} className="border border-sand bg-ivory p-5">
               {!r && <h3 className="eyebrow mb-4 text-emerald">Add an option</h3>}
               <AdminForm action={saveShippingRule} submitLabel={r ? "Save" : "Add option"}>
                 <input type="hidden" name="id" value={r?.id ?? ""} />

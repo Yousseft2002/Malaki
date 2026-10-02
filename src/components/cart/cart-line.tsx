@@ -18,7 +18,7 @@ export function CartLineItem({ item, compact = false }: { item: CartItem; compac
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <h3 className="font-display text-lg leading-snug text-emerald">
-              <Link href={href} onClick={cartDrawer.close} className="hover:underline">
+              <Link href={href} onClick={cartDrawer.close} className="link-gold link-gold-accent">
                 {item.productName}
               </Link>
             </h3>
@@ -45,7 +45,7 @@ export function CartLineItem({ item, compact = false }: { item: CartItem; compac
           <button
             type="button"
             onClick={() => cart.remove(item.id)}
-            className="min-h-11 px-2 text-sm text-muted underline underline-offset-4 hover:text-emerald"
+            className="link-inline min-h-11 px-2 text-sm text-muted transition-[color,transform] hover:text-emerald active:scale-95"
           >
             Remove<span className="sr-only"> {item.productName}</span>
           </button>

@@ -10,7 +10,10 @@ function client(): PrismaClient {
   if (globalForPrisma.prisma) return globalForPrisma.prisma;
   const connectionString = process.env.DATABASE_URL;
   if (!connectionString) throw new Error("Missing environment variable DATABASE_URL (see .env.example)");
-  const created = new PrismaClient({ adapter: new PrismaPg({ connectionString }) });
+  // DATABASE_POOL_MAX caps the connection pool. Leave it unset in production; set
+  // it to 1 for the local `prisma dev` database, which drops concurrent connections.
+  const max = Number(process.env.DATABASE_POOL_MAX) || undefined;
+  const created = new PrismaClient({ adapter: new PrismaPg({ connectionString, max }) });
   globalForPrisma.prisma = created;
   return created;
 }
