@@ -50,3 +50,5 @@ Choices made without asking, during the solo run. ★ = would like the owner's i
     React warning). It still runs before hydration.
 21. **Playwright runs with one worker** — the local Prisma dev database drops connections under
     parallel load. Production Postgres is unaffected.
+22. **Tablets (768–1023px) use the phone layouts** for the header (hamburger), product page
+    (stacked, swipe gallery) and box builder (pinned bar) — the desktop versions were cramped there.

@@ -37,7 +37,7 @@ export function HeadingSkeleton() {
 
 export function ProductPageSkeleton() {
   return (
-    <div className="mt-6 grid gap-10 md:grid-cols-[1.15fr_1fr] lg:gap-x-16">
+    <div className="mt-6 grid gap-10 lg:grid-cols-[1.15fr_1fr] lg:gap-x-16">
       <Block className="aspect-square w-full" />
       <div>
         <Block className="h-3 w-24" />

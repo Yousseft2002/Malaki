@@ -45,12 +45,12 @@ export default async function ProductPage({ params }: Props) {
         />
 
         {/* Mobile: gallery → purchase → details. Desktop: gallery + details left, sticky purchase panel right. */}
-        <div className="mt-6 grid gap-10 [grid-template-areas:'gallery'_'panel'_'details'] md:grid-cols-[1.15fr_1fr] md:[grid-template-areas:'gallery_panel'_'details_panel'] lg:gap-x-16">
+        <div className="mt-6 grid gap-10 [grid-template-areas:'gallery'_'panel'_'details'] lg:grid-cols-[1.15fr_1fr] lg:[grid-template-areas:'gallery_panel'_'details_panel'] lg:gap-x-16">
           <div className="[grid-area:gallery]">
             <Gallery images={product.images} productName={product.name} />
           </div>
 
-          <div className="[grid-area:panel] md:sticky md:top-24 md:self-start">
+          <div className="[grid-area:panel] lg:sticky lg:top-24 lg:self-start">
             <PageIntro>
               {product.collection && (
                 <p className="eyebrow mb-3 text-gold-ink" {...introStep(0)}>

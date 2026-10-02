@@ -32,16 +32,16 @@ export function Gallery({ images, productName }: { images: GalleryImage[]; produ
   return (
     <div>
       {/* Mobile: swipeable strip */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <div
           ref={strip}
-          className="-mx-5 flex snap-x snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="-mx-5 flex snap-x md:-mx-10 snap-mandatory overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           aria-label={`${productName} photos`}
           role="region"
           tabIndex={0}
         >
           {list.map((img, i) => (
-            <div key={img.id} className="w-full shrink-0 snap-center px-5">
+            <div key={img.id} className="w-full shrink-0 snap-center px-5 md:px-10">
               <ProductImage url={img.url} alt={img.alt} sizes="100vw" className="aspect-square w-full" priority={i === 0} />
             </div>
           ))}
@@ -68,7 +68,7 @@ export function Gallery({ images, productName }: { images: GalleryImage[]; produ
       </div>
 
       {/* Desktop: stage + thumbnails */}
-      <div className="hidden gap-4 md:grid md:grid-cols-[5rem_1fr]">
+      <div className="hidden gap-4 lg:grid lg:grid-cols-[5rem_1fr]">
         {list.length > 1 ? (
           <ul className="flex flex-col gap-3" aria-label="Product images">
             {list.map((img, i) => (

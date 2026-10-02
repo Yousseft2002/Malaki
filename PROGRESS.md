@@ -29,8 +29,8 @@ keyframes sequence), `AnimatedCounter`, `FloatingMotif`, `AddToBagFeedback`, `Mo
 - [x] 8. Build-your-own-box signature: visual box, hand-placed pieces, star progress, completion ceremony, mobile pinned preview + bottom sheet, SR announcements
 - [x] 9. Small delights: success page ceremony, 404 empty box, gold skeleton loading states
 - [x] 10. Tests: update flows, add reduced-motion, keyboard, console-error checks; full a11y suite
-- [ ] 11. Self-review pass 1 (screenshots 360 / 768 / 1440) + fixes
-- [ ] 12. Self-review pass 2 + fixes
+- [x] 11. Self-review pass 1 (screenshots 360 / 768 / 1440) + fixes
+- [x] 12. Self-review pass 2 + fixes
 - [ ] 13. Quality gate: build, lint, typecheck, unit, integration, e2e, Lighthouse, palette audit, secrets check
 - [ ] 14. README "Motion system" section; final screenshots in /preview-screenshots; handoff
 
@@ -41,4 +41,5 @@ keyframes sequence), `AnimatedCounter`, `FloatingMotif`, `AddToBagFeedback`, `Mo
 - Product page + add-to-bag choreography done (verified in browser: dot flies, count bumps, drawer opens, no console errors). Fixed sheet width (UA dialog max-width).
 - Box builder done (desktop sticky box + mobile pinned bar/bottom sheet, ceremony verified in browser, no console errors).
 - Delights + tests done: 60 e2e passing (a11y, layout, flows, reduced motion, no-JS, keyboard, console errors), 82 unit.
-- Next: 11/12 self-review passes at 360/768/1440.
+- Review passes done (tablet nav/gallery layout, collection header band, Our Story arch reveals, empty states).
+- Next: 13 quality gate, 14 README + screenshots + handoff.
