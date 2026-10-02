@@ -6,6 +6,7 @@ import { getDeliveryDates, startCheckout } from "@/app/actions/checkout";
 import { Field, describedBy } from "@/components/forms/field";
 import { ButtonLink } from "@/components/ui/button";
 import { money } from "@/components/ui/price";
+import { STORE_LOCALE } from "@/lib/store-config";
 import { useCartQuote } from "@/lib/cart/use-cart-quote";
 import { toCartLine } from "@/lib/cart/types";
 import { countryOptions } from "@/lib/countries";
@@ -18,7 +19,7 @@ import { OrderSummary } from "./order-summary";
 type Errors = Record<string, string[] | undefined>;
 
 const formatDate = (iso: string) =>
-  new Intl.DateTimeFormat("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${iso}T00:00:00Z`));
+  new Intl.DateTimeFormat(STORE_LOCALE, { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).format(new Date(`${iso}T00:00:00Z`));
 
 export function CheckoutForm({
   rules,
@@ -32,7 +33,11 @@ export function CheckoutForm({
   const id = useId();
   const { items, quote, error: quoteError } = useCartQuote();
   const [ruleId, setRuleId] = useState(rules[0]?.id ?? "");
-  const [country, setCountry] = useState("");
+  // MALAKI is based in Boston: preselect the US when the first option ships there.
+  const [country, setCountry] = useState(() => {
+    const first = rules.find((r) => r.method === "DELIVERY");
+    return !first || first.countries.length === 0 || first.countries.includes("US") ? "US" : "";
+  });
   const [dates, setDates] = useState<DateOption[] | null>(null);
   const [datesError, setDatesError] = useState<string>();
   const [deliveryDate, setDeliveryDate] = useState("");
@@ -219,10 +224,10 @@ export function CheckoutForm({
                 <Field id={`${id}-city`} label="Town or city" error={err("address.city")}>
                   <input name="city" autoComplete="shipping address-level2" required className="field-input" {...describedBy(`${id}-city`, err("address.city"))} />
                 </Field>
-                <Field id={`${id}-region`} label="County / region" optional>
+                <Field id={`${id}-region`} label="State" optional>
                   <input name="region" autoComplete="shipping address-level1" className="field-input" id={`${id}-region`} />
                 </Field>
-                <Field id={`${id}-postalCode`} label="Postcode" error={err("address.postalCode")}>
+                <Field id={`${id}-postalCode`} label="ZIP / postal code" error={err("address.postalCode")}>
                   <input
                     name="postalCode"
                     autoComplete="shipping postal-code"

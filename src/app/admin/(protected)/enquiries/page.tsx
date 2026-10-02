@@ -26,7 +26,7 @@ export default async function AdminEnquiriesPage() {
                 </h2>
                 <StatusBadge status={e.status} />
                 <span className="text-sm text-muted">
-                  {e.type.toLowerCase()} · received {e.createdAt.toLocaleDateString("en-GB")}
+                  {e.type.toLowerCase()} · received {e.createdAt.toLocaleDateString("en-US")}
                 </span>
               </div>
               <p className="text-sm">

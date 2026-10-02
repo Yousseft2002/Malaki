@@ -8,7 +8,7 @@ import { z } from "zod";
 const schema = z.object({
   DATABASE_URL: z.string().min(1),
   NEXT_PUBLIC_SITE_URL: z.url().default("http://localhost:3000"),
-  STORE_TIMEZONE: z.string().default("UTC"),
+  STORE_TIMEZONE: z.string().default("America/New_York"),
 
   STRIPE_SECRET_KEY: z.string().optional(),
   STRIPE_WEBHOOK_SECRET: z.string().optional(),

@@ -14,7 +14,7 @@ export default async function CheckoutPage({ searchParams }: Props) {
       <h1 className="mb-8 text-center text-4xl text-emerald">Checkout</h1>
       {cancelled && (
         <p role="status" className="mx-auto mb-8 max-w-2xl border border-gold-ink bg-sand p-4 text-center">
-          Payment was cancelled — your bag is still here whenever you&apos;re ready.
+          Payment was canceled — your bag is still here whenever you&apos;re ready.
         </p>
       )}
       <CheckoutForm

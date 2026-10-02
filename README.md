@@ -41,9 +41,9 @@ commit `.env`; it is git-ignored. Empty values are treated as "not set".
 | --- | --- | --- |
 | `DATABASE_URL` | yes | PostgreSQL connection string |
 | `NEXT_PUBLIC_SITE_URL` | yes (prod) | Public URL; used for Stripe redirects, sitemap, canonical URLs |
-| `NEXT_PUBLIC_STORE_CURRENCY` | **decision** | ISO currency code (default `EUR` placeholder) |
-| `NEXT_PUBLIC_STORE_LOCALE` | no | Number/currency formatting locale (default `en-GB`) |
-| `STORE_TIMEZONE` | **decision** | Kitchen time zone for "today", lead times and dispatch days (default `UTC`) |
+| `NEXT_PUBLIC_STORE_CURRENCY` | no | ISO currency code (default `USD`; MALAKI is based in Boston) |
+| `NEXT_PUBLIC_STORE_LOCALE` | no | Number/currency formatting locale (default `en-US`) |
+| `STORE_TIMEZONE` | no | Kitchen time zone for "today", lead times and dispatch days (default `America/New_York`) |
 | `STRIPE_SECRET_KEY` | for checkout | Stripe secret key (`sk_test_…` while testing) |
 | `STRIPE_WEBHOOK_SECRET` | for checkout | Signing secret of the webhook endpoint (`whsec_…`) |
 | `CHECKOUT_HOLD_MINUTES` | no | How long a checkout holds capacity / session stays open (31–1380, default 60) |

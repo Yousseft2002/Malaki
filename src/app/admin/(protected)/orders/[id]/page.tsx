@@ -12,7 +12,7 @@ import { fromUtcDate } from "@/lib/domain/dates";
 type Props = { params: Promise<{ id: string }> };
 type BoxContent = { name: string; quantity: number };
 
-const fmt = (d: Date | null) => (d ? d.toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short" }) : "—");
+const fmt = (d: Date | null) => (d ? d.toLocaleString("en-US", { timeZone: process.env.STORE_TIMEZONE || "America/New_York", dateStyle: "medium", timeStyle: "short" }) : "—");
 
 export default async function AdminOrderPage({ params }: Props) {
   await requireAdmin();

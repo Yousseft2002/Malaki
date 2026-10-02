@@ -134,8 +134,8 @@ export default async function AdminShippingPage() {
                   </div>
                   <AdminInput id={`r-${key}-flat`} name="flatRate" label="Rate (empty = unavailable)" defaultValue={formatMoneyInput(r?.flatRateCents)} inputMode="decimal" placeholder="[PRICE]" />
                   <AdminInput id={`r-${key}-free`} name="freeOver" label="Free over" defaultValue={formatMoneyInput(r?.freeOverCents)} inputMode="decimal" />
-                  <AdminInput id={`r-${key}-countries`} name="countries" label="Countries (e.g. GB IE; empty = any)" defaultValue={r?.countries.join(" ") ?? ""} />
-                  <AdminInput id={`r-${key}-postcodes`} name="postcodePrefixes" label="Postcode prefixes (optional)" defaultValue={r?.postcodePrefixes.join(" ") ?? ""} />
+                  <AdminInput id={`r-${key}-countries`} name="countries" label="Countries (e.g. US CA; empty = any)" defaultValue={r?.countries.join(" ") ?? ""} />
+                  <AdminInput id={`r-${key}-postcodes`} name="postcodePrefixes" label="ZIP code prefixes (optional)" defaultValue={r?.postcodePrefixes.join(" ") ?? ""} />
                   <AdminInput id={`r-${key}-lead`} name="leadTimeDays" label="Lead time (days before dispatch)" defaultValue={r?.leadTimeDays ?? 1} inputMode="numeric" />
                   <AdminInput id={`r-${key}-transit`} name="transitDays" label="Transit (days dispatch → delivery)" defaultValue={r?.transitDays ?? 0} inputMode="numeric" />
                   <AdminInput id={`r-${key}-ahead`} name="maxDaysAhead" label="Bookable up to (days ahead)" defaultValue={r?.maxDaysAhead ?? 60} inputMode="numeric" />

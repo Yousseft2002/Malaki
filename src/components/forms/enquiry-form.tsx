@@ -75,7 +75,7 @@ export function EnquiryForm({ defaultType }: { defaultType?: string }) {
         <Field id={`${id}-phone`} label="Phone" optional error={err("phone")}>
           <input name="phone" type="tel" autoComplete="tel" className="field-input" {...describedBy(`${id}-phone`, err("phone"))} />
         </Field>
-        <Field id={`${id}-company`} label="Company or organisation" optional>
+        <Field id={`${id}-company`} label="Company or organization" optional>
           <input name="company" autoComplete="organization" className="field-input" id={`${id}-company`} />
         </Field>
         <Field id={`${id}-eventDate`} label="Event date" optional error={err("eventDate")}>

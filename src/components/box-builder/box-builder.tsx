@@ -130,7 +130,7 @@ export function BoxBuilder({
         {/* Step 2 */}
         <section aria-labelledby={`${id}-fill`}>
           <h2 id={`${id}-fill`} className="mb-5 font-display text-2xl text-emerald">
-            <span className="eyebrow mr-3 align-middle text-gold-ink">Step 2</span>Fill it with favourites
+            <span className="eyebrow mr-3 align-middle text-gold-ink">Step 2</span>Fill it with favorites
           </h2>
           {available.length === 0 ? (
             <p className="text-muted">No pieces are available for this box right now.</p>

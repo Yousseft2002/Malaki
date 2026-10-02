@@ -9,7 +9,7 @@ export const COUNTRY_CODES = (
   "UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW"
 ).split(" ");
 
-export function countryName(code: string, locale = "en-GB"): string {
+export function countryName(code: string, locale = "en-US"): string {
   try {
     return new Intl.DisplayNames([locale], { type: "region" }).of(code) ?? code;
   } catch {
@@ -17,7 +17,7 @@ export function countryName(code: string, locale = "en-GB"): string {
   }
 }
 
-export function countryOptions(codes: string[] = COUNTRY_CODES, locale = "en-GB") {
+export function countryOptions(codes: string[] = COUNTRY_CODES, locale = "en-US") {
   return codes
     .map((code) => ({ code, name: countryName(code, locale) }))
     .sort((a, b) => a.name.localeCompare(b.name, locale));
