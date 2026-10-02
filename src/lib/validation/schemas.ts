@@ -76,7 +76,7 @@ export const addressSchema = z.object({
   addressLine2: optional(200),
   city: required("the town or city", 120),
   region: optional(120),
-  postalCode: required("the postcode", 20),
+  postalCode: required("the ZIP or postal code", 20),
   country: z
     .string()
     .trim()

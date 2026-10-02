@@ -5,7 +5,7 @@ export const PRICE_PLACEHOLDER = "[PRICE]";
 export function formatMoney(
   cents: number | null | undefined,
   currency: string,
-  locale = "en-GB",
+  locale = "en-US",
 ): string {
   if (cents === null || cents === undefined) return PRICE_PLACEHOLDER;
   return new Intl.NumberFormat(locale, {

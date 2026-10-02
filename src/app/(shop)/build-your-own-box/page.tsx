@@ -5,7 +5,7 @@ import { getBoxBuilderData, getStoreSettings } from "@/lib/queries/catalog";
 
 export const metadata: Metadata = {
   title: "Build your own box",
-  description: "Choose a box size and fill it with your favourite Moroccan cookies and stuffed dates.",
+  description: "Choose a box size and fill it with your favorite Moroccan cookies and stuffed dates.",
   alternates: { canonical: "/build-your-own-box" },
 };
 

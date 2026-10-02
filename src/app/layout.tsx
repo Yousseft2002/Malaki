@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: "MALAKI — Moroccan confectionery & gift boxes", template: "%s | MALAKI" },
   description: "[META DESCRIPTION — one sentence describing MALAKI for search results]",
-  openGraph: { siteName: "MALAKI", type: "website", locale: "en_GB" },
+  openGraph: { siteName: "MALAKI", type: "website", locale: "en_US" },
 };
 
 export const viewport: Viewport = {

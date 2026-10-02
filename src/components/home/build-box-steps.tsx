@@ -3,7 +3,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 
 const steps = [
   { title: "Choose your box", body: "Pick the size that suits the occasion." },
-  { title: "Fill it with favourites", body: "Mix cookies and stuffed dates, piece by piece." },
+  { title: "Fill it with favorites", body: "Mix cookies and stuffed dates, piece by piece." },
   { title: "Add a personal note", body: "We'll wrap it and send it on the date you choose." },
 ];
 

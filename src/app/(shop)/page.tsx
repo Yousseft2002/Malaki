@@ -23,7 +23,7 @@ export default async function HomePage() {
 
       <section aria-labelledby="signature-title" className="border-t border-sand pb-20 pt-20 md:pb-28 md:pt-28">
         <div className="container-page">
-          <SectionHeading id="signature-title" eyebrow="The signature collection" title="House favourites" />
+          <SectionHeading id="signature-title" eyebrow="The signature collection" title="House favorites" />
           <div className="mt-14">
             <ProductGrid products={signature} />
           </div>
