@@ -1,6 +1,7 @@
 "use client";
 
 import { ButtonLink } from "@/components/ui/button";
+import { GiftBoxScene } from "@/components/ui/gift-box-scene";
 import { Price } from "@/components/ui/price";
 import { CloseButton, Sheet } from "@/components/ui/sheet";
 import { cartDrawer, useCartDrawer } from "@/lib/cart/drawer";
@@ -21,7 +22,8 @@ export function CartDrawer() {
 
       {items.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
-          <p className="text-muted">Your bag is empty.</p>
+          <GiftBoxScene variant="empty" className="mb-6 scale-75" />
+          <p className="font-display text-xl text-emerald">Your bag is empty</p>
           <ButtonLink href="/collections/gift-boxes" variant="outline" onClick={cartDrawer.close}>
             Shop gift boxes
           </ButtonLink>

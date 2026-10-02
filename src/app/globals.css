@@ -670,3 +670,48 @@
     display: none;
   }
 }
+
+/* ─── Gift box scenes (success page, 404) ───────────────────────────────── */
+@keyframes lid-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-115%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes grow-x {
+  from {
+    transform: translateY(-50%) scaleX(0);
+  }
+  to {
+    transform: translateY(-50%) scaleX(1);
+  }
+}
+@keyframes grow-y {
+  from {
+    transform: translateX(-50%) scaleY(0);
+  }
+  to {
+    transform: translateX(-50%) scaleY(1);
+  }
+}
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ─── Loading skeletons ─────────────────────────────────────────────────── */
+@layer components {
+  .skeleton {
+    background: color-mix(in srgb, var(--color-sand) 85%, var(--color-gold));
+  }
+}

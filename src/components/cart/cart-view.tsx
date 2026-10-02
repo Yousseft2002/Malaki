@@ -1,6 +1,7 @@
 "use client";
 
 import { ButtonLink } from "@/components/ui/button";
+import { GiftBoxScene } from "@/components/ui/gift-box-scene";
 import { Price } from "@/components/ui/price";
 import { useCartQuote } from "@/lib/cart/use-cart-quote";
 import { AnimatedCartList } from "./animated-cart-list";
@@ -12,7 +13,8 @@ export function CartView() {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center gap-6 py-10 text-center">
-        <p className="text-muted">Your bag is empty.</p>
+        <GiftBoxScene variant="empty" className="mb-6 scale-75" />
+          <p className="font-display text-xl text-emerald">Your bag is empty</p>
         <ButtonLink href="/collections/gift-boxes" variant="outline">
           Shop gift boxes
         </ButtonLink>

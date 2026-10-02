@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { ClearCart } from "@/components/checkout/clear-cart";
 import { ButtonLink } from "@/components/ui/button";
+import { GiftBoxScene } from "@/components/ui/gift-box-scene";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { db } from "@/lib/db";
 
@@ -33,8 +34,10 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
 
   const confirmed = order.status !== "PENDING_PAYMENT" && order.status !== "CANCELLED";
   return (
-    <div className="container-page py-20 text-center">
+    <div className="container-page py-16 text-center md:py-24">
       <ClearCart />
+      {/* The box closes, the ribbon ties itself, a few gold stars — then the thank-you. */}
+      <GiftBoxScene variant="celebrate" className="mb-14" />
       <SectionHeading
         as="h1"
         eyebrow={`Order ${order.number}`}
@@ -45,7 +48,8 @@ export default async function CheckoutSuccessPage({ searchParams }: Props) {
             : `We're confirming your payment. You'll receive an email at ${order.buyerEmail} as soon as it's complete.`
         }
       />
-      <ButtonLink href="/" variant="outline" className="mt-10">
+      {confirmed && <p className="mt-4 font-display text-xl text-gold-ink italic">We hope it brings a little royalty to someone’s day.</p>}
+      <ButtonLink href="/" variant="outline" className="mt-10" arrow>
         Continue browsing
       </ButtonLink>
     </div>
