@@ -43,7 +43,7 @@ export default function OurStoryPage() {
               </div>
             </InView>
             <Stagger>
-              <p aria-hidden="true" className="font-display text-6xl text-gold-ink/40">
+              <p aria-hidden="true" className="font-display text-6xl text-gold-ink/80">
                 {NUMERALS[i]}
               </p>
               <h2 className="mt-2 text-3xl text-emerald sm:text-4xl">{c.title}</h2>

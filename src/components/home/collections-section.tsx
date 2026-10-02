@@ -35,7 +35,7 @@ export function CollectionsSection({ collections }: { collections: CollectionCar
               />
               <span
                 aria-hidden="true"
-                className="relative col-start-1 row-start-1 m-5 self-start justify-self-end font-display text-5xl text-gold-ink/50 transition-transform duration-700 group-hover:-translate-y-1"
+                className="relative col-start-1 row-start-1 m-5 self-start justify-self-end font-display text-5xl text-gold-ink/80 transition-transform duration-700 group-hover:-translate-y-1"
               >
                 {NUMERALS[i] ?? i + 1}
               </span>
