@@ -56,7 +56,7 @@ export function NewsletterForm({ source = "footer", tone = "dark" }: { source?: 
         </p>
       )}
       <p className={`mt-3 text-xs ${dark ? "text-sand/90" : "text-muted"}`}>
-        [NEWSLETTER CONSENT TEXT — what you'll send and how to unsubscribe; link to privacy policy]
+        [NEWSLETTER CONSENT TEXT — what you&apos;ll send and how to unsubscribe; link to privacy policy]
       </p>
     </form>
   );

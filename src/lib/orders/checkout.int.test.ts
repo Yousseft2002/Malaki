@@ -3,7 +3,8 @@
 
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 
-const stripeCreate = vi.fn(async (_params: Record<string, unknown>, _opts?: unknown) => ({
+type SessionCreate = (params: Record<string, unknown>, opts?: unknown) => Promise<{ id: string; url: string }>;
+const stripeCreate = vi.fn<SessionCreate>(async () => ({
   id: `cs_test_${Math.random().toString(36).slice(2)}`,
   url: "https://checkout.stripe.test/session",
 }));
