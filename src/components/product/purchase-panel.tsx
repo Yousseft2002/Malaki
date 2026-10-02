@@ -64,7 +64,7 @@ export function PurchasePanel({
               <label
                 key={v.id}
                 className={`flex min-h-11 cursor-pointer items-center gap-2 border px-4 py-2 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-emerald ${
-                  v.id === variantId ? "border-emerald bg-emerald text-ivory" : "border-[#857a63] text-ink hover:border-emerald"
+                  v.id === variantId ? "border-emerald bg-emerald text-ivory" : "border-line text-ink hover:border-emerald"
                 }`}
               >
                 <input

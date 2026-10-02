@@ -143,7 +143,7 @@ export function CheckoutForm({
     <form onSubmit={onSubmit} noValidate className="grid gap-10 lg:grid-cols-[1.5fr_1fr]">
       <div className="flex flex-col gap-10">
         {(formError || quoteError) && (
-          <div ref={summaryRef} tabIndex={-1} role="alert" className="border border-error bg-white p-4 text-error focus:outline-2">
+          <div ref={summaryRef} tabIndex={-1} role="alert" className="border border-error bg-ivory p-4 text-error focus:outline-2">
             <p className="font-medium">{formError ?? quoteError}</p>
             {fieldErrorList.length > 0 && (
               <ul className="mt-2 list-disc pl-5 text-sm">

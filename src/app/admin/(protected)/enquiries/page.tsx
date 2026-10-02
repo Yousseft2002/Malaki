@@ -18,7 +18,7 @@ export default async function AdminEnquiriesPage() {
       <ul className="flex flex-col gap-4">
         {enquiries.map((e) => (
           <li key={e.id}>
-            <article aria-labelledby={`enq-${e.id}`} className="border border-sand bg-white p-5">
+            <article aria-labelledby={`enq-${e.id}`} className="border border-sand bg-ivory p-5">
               <div className="mb-2 flex flex-wrap items-center gap-3">
                 <h2 id={`enq-${e.id}`} className="font-display text-xl text-emerald">
                   {e.name}

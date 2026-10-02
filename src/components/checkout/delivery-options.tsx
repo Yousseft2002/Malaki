@@ -45,7 +45,7 @@ export function DeliveryOptions({
             <label
               key={r.id}
               className={`flex min-h-14 cursor-pointer items-start gap-3 border p-4 has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-emerald ${
-                r.id === value ? "border-emerald bg-white" : "border-[#857a63]"
+                r.id === value ? "border-emerald bg-sand/60" : "border-line"
               } ${unavailable ? "cursor-not-allowed opacity-60" : ""}`}
             >
               <input

@@ -113,7 +113,7 @@ export function BoxBuilder({
               <label
                 key={s.id}
                 className={`flex min-h-24 cursor-pointer flex-col items-center justify-center gap-1 border p-4 text-center has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-emerald ${
-                  s.id === sizeId ? "border-emerald bg-emerald text-ivory" : "border-[#857a63] bg-white/40 hover:border-emerald"
+                  s.id === sizeId ? "border-emerald bg-emerald text-ivory" : "border-line bg-ivory/40 hover:border-emerald"
                 }`}
               >
                 <input type="radio" name={`${id}-size`} className="sr-only" checked={s.id === sizeId} onChange={() => chooseSize(s)} />
@@ -191,7 +191,7 @@ export function BoxBuilder({
           {check.remaining > 0 ? ` · ${check.remaining} to go` : filled === size.capacity ? " · complete" : ""}
         </p>
 
-        <dl className="mt-6 grid grid-cols-[1fr_auto] gap-y-1 border-t border-[#d8ccb0] pt-4 text-sm">
+        <dl className="mt-6 grid grid-cols-[1fr_auto] gap-y-1 border-t border-ink/15 pt-4 text-sm">
           <dt>Box</dt>
           <dd className="text-right">{money(price.boxCents)}</dd>
           <dt>Pieces</dt>

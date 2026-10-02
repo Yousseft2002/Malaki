@@ -19,7 +19,7 @@ export function PieceRow({
 }) {
   const soldOut = piece.stock <= 0;
   const btn =
-    "inline-flex h-11 w-11 items-center justify-center border border-emerald text-lg text-emerald hover:bg-emerald hover:text-ivory disabled:border-[#857a63] disabled:text-muted disabled:opacity-50 disabled:hover:bg-transparent";
+    "inline-flex h-11 w-11 items-center justify-center border border-emerald text-lg text-emerald hover:bg-emerald hover:text-ivory disabled:border-line disabled:text-muted disabled:opacity-50 disabled:hover:bg-transparent";
   return (
     <div className="flex items-center gap-4 py-4">
       <ImagePlaceholder label={piece.imageLabel ?? piece.name} className="h-16 w-16 shrink-0" />

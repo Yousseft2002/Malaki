@@ -30,13 +30,13 @@ export default async function AdminOrderPage({ params }: Props) {
         <StatusBadge status={order.status} />
       </div>
       {order.stockIssue && (
-        <p role="alert" className="mb-6 border border-error bg-white p-3 text-error">
+        <p role="alert" className="mb-6 border border-error bg-ivory p-3 text-error">
           Stock ran out for an item in this order — check before packing.
         </p>
       )}
 
       <div className="grid gap-8 lg:grid-cols-[2fr_1fr]">
-        <section aria-labelledby="items-title" className="h-fit border border-sand bg-white p-5">
+        <section aria-labelledby="items-title" className="h-fit border border-sand bg-ivory p-5">
           <h2 id="items-title" className="eyebrow mb-4 text-emerald">
             Items
           </h2>
@@ -72,7 +72,7 @@ export default async function AdminOrderPage({ params }: Props) {
         </section>
 
         <div className="flex flex-col gap-6">
-          <section aria-labelledby="fulfil-title" className="border border-sand bg-white p-5">
+          <section aria-labelledby="fulfil-title" className="border border-sand bg-ivory p-5">
             <h2 id="fulfil-title" className="eyebrow mb-4 text-emerald">
               Fulfilment
             </h2>
@@ -112,7 +112,7 @@ export default async function AdminOrderPage({ params }: Props) {
             )}
           </section>
 
-          <section aria-labelledby="people-title" className="border border-sand bg-white p-5 text-sm">
+          <section aria-labelledby="people-title" className="border border-sand bg-ivory p-5 text-sm">
             <h2 id="people-title" className="eyebrow mb-4 text-emerald">
               Buyer &amp; recipient
             </h2>
@@ -141,7 +141,7 @@ export default async function AdminOrderPage({ params }: Props) {
             {order.giftOptions?.giftWrap && <p className="mt-2 text-gold-ink">Gift wrap requested</p>}
           </section>
 
-          <section aria-labelledby="note-title" className="border border-sand bg-white p-5">
+          <section aria-labelledby="note-title" className="border border-sand bg-ivory p-5">
             <h2 id="note-title" className="eyebrow mb-4 text-emerald">
               Internal note
             </h2>

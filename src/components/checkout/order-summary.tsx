@@ -28,7 +28,7 @@ export function OrderSummary({
       <h2 id="order-summary-title" className="eyebrow mb-5 text-emerald">
         Order summary
       </h2>
-      <ul className="mb-5 divide-y divide-[#d8ccb0]">
+      <ul className="mb-5 divide-y divide-ink/15">
         {items.map((item, i) => (
           <li key={item.id} className="py-3 text-sm">
             <div className="flex justify-between gap-3">
@@ -46,7 +46,7 @@ export function OrderSummary({
           </li>
         ))}
       </ul>
-      <dl className="grid grid-cols-[1fr_auto] gap-y-2 border-t border-[#d8ccb0] pt-4">
+      <dl className="grid grid-cols-[1fr_auto] gap-y-2 border-t border-ink/15 pt-4">
         <dt>Subtotal</dt>
         <dd className="text-right">{quote ? <Price cents={quote.subtotalCents} /> : "…"}</dd>
         <dt>Gift wrapping</dt>

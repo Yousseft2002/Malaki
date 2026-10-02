@@ -55,7 +55,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
               <Link
                 href={`/admin/orders${qs(s)}`}
                 aria-current={s === filter ? "page" : undefined}
-                className={`inline-flex min-h-11 items-center px-3 text-sm ${s === filter ? "bg-emerald text-ivory" : "bg-white text-ink hover:bg-sand"}`}
+                className={`inline-flex min-h-11 items-center px-3 text-sm ${s === filter ? "bg-emerald text-ivory" : "bg-ivory text-ink hover:bg-sand"}`}
               >
                 {s ? s.replace("_", " ").toLowerCase() : "all (excl. pending)"}
               </Link>
@@ -67,7 +67,7 @@ export default async function AdminOrdersPage({ searchParams }: Props) {
       {orders.length === 0 ? (
         <p className="text-muted">No orders.</p>
       ) : (
-        <div className="overflow-x-auto border border-sand bg-white">
+        <div className="overflow-x-auto border border-sand bg-ivory">
           <table className="w-full min-w-[720px] text-left text-sm">
             <caption className="sr-only">Orders sorted by dispatch date</caption>
             <thead className="bg-sand">

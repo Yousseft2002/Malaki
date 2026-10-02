@@ -17,7 +17,8 @@
     "postinstall": "prisma generate",
     "admin:hash": "tsx scripts/hash-password.ts",
     "test:integration": "vitest run --config vitest.integration.config.mts",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "palette:audit": "node scripts/palette-audit.mjs"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
