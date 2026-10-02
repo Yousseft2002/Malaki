@@ -33,3 +33,13 @@ Choices made without asking, during the solo run. ★ = would like the owner's i
     browser supports it (Chrome/Edge today); elsewhere they open instantly, and the content always
     fades/rises in. This is the one place height animates, because opening a section must push the
     content below it down.
+14. ★ **Box pieces are illustrated "sweets", not photos.** Box items have no image field and adding one
+    would be a schema change (out of scope), so each kind of piece gets an embossed palette finish
+    (six finishes, by list position). Easy to swap for photos later by adding an image to BoxItem.
+15. **Placement order is visual state only.** The builder remembers the order pieces were placed so
+    each lands in its own slot; the selection (and all rules/pricing) is unchanged.
+16. **Completed box closes its lid** (with a "Peek inside" toggle to reopen). Removing a piece reopens
+    it automatically.
+17. **Pulses are finite** (three gentle beats), so nothing loops forever or distracts.
+18. **Mobile box**: a pinned bar (progress stars, count, total) opens a bottom sheet with the full
+    box, totals and Add to bag. Page has bottom padding so the bar never covers content.

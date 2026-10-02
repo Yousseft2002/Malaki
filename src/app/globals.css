@@ -632,3 +632,41 @@
     transition: none;
   }
 }
+
+/* ─── Build-your-own-box ceremony ───────────────────────────────────────── */
+@keyframes sweep {
+  from {
+    transform: translateX(-120%) skewX(-12deg);
+  }
+  to {
+    transform: translateX(220%) skewX(-12deg);
+  }
+}
+@keyframes burst {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(0) scale(0.2);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(calc(var(--r, 90px) * -1)) scale(1) rotate(90deg);
+  }
+}
+@keyframes pulse-gold {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.025);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .burst-star,
+  .sweep-band {
+    display: none;
+  }
+}

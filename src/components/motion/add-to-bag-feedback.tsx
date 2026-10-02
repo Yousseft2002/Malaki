@@ -68,6 +68,7 @@ export function flyToBag(from: HTMLElement | null): Promise<void> {
  */
 export function AddToBagButton({
   onAdd,
+  validate,
   disabled,
   children,
   addedLabel = "Added",
@@ -75,11 +76,13 @@ export function AddToBagButton({
   pulse = false,
 }: {
   onAdd: () => void;
+  /** Return false to skip the animation (e.g. show validation errors instead). */
+  validate?: () => boolean;
   disabled?: boolean;
   children: ReactNode;
   addedLabel?: string;
   className?: string;
-  /** Gently pulse to invite the click (e.g. a completed box). */
+  /** Gently pulse (three times) to invite the click, e.g. a completed box. */
   pulse?: boolean;
 }) {
   const ref = useRef<HTMLButtonElement>(null);
@@ -93,6 +96,7 @@ export function AddToBagButton({
 
   async function handleClick() {
     if (state === "adding") return;
+    if (validate && !validate()) return;
     setState("adding");
     await flyToBag(ref.current);
     onAdd();
@@ -106,7 +110,7 @@ export function AddToBagButton({
       onClick={handleClick}
       disabled={disabled}
       aria-busy={state === "adding" || undefined}
-      className={buttonClasses("primary", `min-h-14 text-sm ${pulse && state === "idle" ? "animate-[gentle-pulse_1.8s_var(--ease-in-out)_infinite]" : ""} ${className}`)}
+      className={buttonClasses("primary", `min-h-14 text-sm ${pulse && state === "idle" ? "animate-[gentle-pulse_1.6s_var(--ease-in-out)_3]" : ""} ${className}`)}
     >
       {state === "added" ? (
         <span className="inline-flex items-center gap-2">

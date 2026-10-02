@@ -26,7 +26,7 @@ keyframes sequence), `AnimatedCounter`, `FloatingMotif`, `AddToBagFeedback`, `Mo
 - [x] 5. Add-to-bag feedback: press → check → gold dot arcs to bag → count bump → drawer
 - [x] 6. Homepage: hero (editorial layout, motif shimmer, staggered intro), section reveals, collection cards, product cards, story arch reveal, build-box steps, gifting, newsletter
 - [x] 7. Product detail: immersive gallery (swipe on mobile, crossfade + zoom on desktop), sticky panel, box-size selector cards, animated price, gift-wrap ribbon preview, live gift-note card, smooth accordions
-- [ ] 8. Build-your-own-box signature: visual box, hand-placed pieces, star progress, completion ceremony, mobile pinned preview + bottom sheet, SR announcements
+- [x] 8. Build-your-own-box signature: visual box, hand-placed pieces, star progress, completion ceremony, mobile pinned preview + bottom sheet, SR announcements
 - [ ] 9. Small delights: success page ceremony, 404 empty box, gold skeleton loading states
 - [ ] 10. Tests: update flows, add reduced-motion, keyboard, console-error checks; full a11y suite
 - [ ] 11. Self-review pass 1 (screenshots 360 / 768 / 1440) + fixes
@@ -39,4 +39,5 @@ keyframes sequence), `AnimatedCounter`, `FloatingMotif`, `AddToBagFeedback`, `Mo
 - Safety lock: branch created, push deny rule committed.
 - Motion system, palette audit (scripts/palette-audit.mjs), cart animations, homepage done. Screenshot tool: `MSYS_NO_PATHCONV=1 npx tsx scripts/screenshots.mts <dir> [paths]` (dev server on :3000).
 - Product page + add-to-bag choreography done (verified in browser: dot flies, count bumps, drawer opens, no console errors). Fixed sheet width (UA dialog max-width).
-- Next: 8 box builder.
+- Box builder done (desktop sticky box + mobile pinned bar/bottom sheet, ceremony verified in browser, no console errors).
+- Next: 9 small delights (success, 404, skeletons), then 10 tests.
