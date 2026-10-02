@@ -50,7 +50,7 @@ export default async function ProductPage({ params }: Props) {
             {product.collection && <p className="eyebrow mb-3 text-gold-ink">{product.collection.name}</p>}
             <h1 className="text-4xl text-emerald sm:text-5xl">{product.name}</h1>
             {product.tagline && <p className="mt-3 text-lg text-muted">{product.tagline}</p>}
-            <StarDivider tone="ink" className="my-7 justify-start" />
+            <StarDivider tone="ink" align="start" className="my-7" />
             {product.description && <p className="mb-8 whitespace-pre-line text-muted">{product.description}</p>}
 
             <PurchasePanel

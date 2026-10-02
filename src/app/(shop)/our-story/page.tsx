@@ -30,7 +30,7 @@ export default function OurStoryPage() {
             <ImagePlaceholder label={c.image} className={`aspect-[4/5] w-full ${i % 2 ? "md:order-last" : ""}`} />
             <div>
               <h2 className="text-3xl text-emerald sm:text-4xl">{c.title}</h2>
-              <StarDivider tone="ink" className="my-6 justify-start" />
+              <StarDivider tone="ink" align="start" className="my-6" />
               <p className="text-lg text-muted">{c.body}</p>
             </div>
           </section>

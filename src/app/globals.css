@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* MALAKI brand tokens */
+/* ─── MALAKI brand tokens (palette is fixed — do not add hues) ─────────────── */
 @theme {
   --color-emerald: #0b3a2e;
   --color-emerald-deep: #072e24;
@@ -13,11 +13,34 @@
   --color-muted: #4e5a50;
   --color-error: #9b2c1f;
 
+  /* Derived only by mixing palette colours (allowed: overlays / transparency). */
+  --color-gold-light: color-mix(in srgb, var(--color-gold) 75%, var(--color-ivory));
+  --color-line: color-mix(in srgb, var(--color-muted) 80%, transparent); /* ≥3:1 control borders */
+  --color-hairline: color-mix(in srgb, var(--color-gold) 35%, transparent); /* decorative rules */
+
   --font-display: var(--font-playfair), Georgia, "Times New Roman", serif;
   --font-sans: var(--font-jost), system-ui, -apple-system, "Segoe UI", sans-serif;
 
   --tracking-label: 0.22em;
   --tracking-wordmark: 0.32em;
+}
+
+/* ─── Motion tokens (mirror of src/components/motion/tokens.ts) ───────────── */
+:root {
+  --dur-instant: 120ms;
+  --dur-fast: 200ms;
+  --dur-base: 320ms;
+  --dur-slow: 550ms;
+  --dur-reveal: 700ms;
+  --dur-ceremony: 1100ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-spring: cubic-bezier(0.32, 1.25, 0.5, 1);
+  --stagger-tight: 40ms;
+  --stagger-base: 70ms;
+  --stagger-loose: 120ms;
+  --lift: -2px;
 }
 
 @layer base {
@@ -42,6 +65,9 @@
     line-height: 1.15;
     text-wrap: balance;
   }
+  ::selection {
+    background: color-mix(in srgb, var(--color-gold) 40%, transparent);
+  }
   :focus-visible {
     outline: 2px solid var(--color-gold);
     outline-offset: 3px;
@@ -50,22 +76,14 @@
   main :focus-visible {
     outline-color: var(--color-emerald);
   }
+  main .on-dark :focus-visible {
+    outline-color: var(--color-gold);
+  }
   summary {
     cursor: pointer;
   }
   summary::-webkit-details-marker {
     display: none;
-  }
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      transition-duration: 0.01ms !important;
-    }
   }
 }
 
@@ -98,11 +116,15 @@
     display: block;
     width: 100%;
     min-height: 2.75rem;
-    border: 1px solid #857a63;
-    background: #fffdf8;
+    border: 1px solid var(--color-line);
+    background: var(--color-ivory);
     padding: 0.625rem 0.875rem;
     color: var(--color-ink);
     border-radius: 0;
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
+  .field-input:hover {
+    border-color: var(--color-muted);
   }
   .field-input:focus {
     outline: 2px solid var(--color-emerald);
@@ -111,5 +133,422 @@
   }
   .field-input[aria-invalid="true"] {
     border-color: var(--color-error);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOTION LAYER — transform + opacity only. See README → "Motion system".
+   Content is only hidden for reveal once JS has set html[data-js].
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* ── Reveal (with <Reveal>) ─────────────────────────────────────────────── */
+  [data-js] .reveal {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition:
+      opacity var(--dur-reveal) var(--ease-out),
+      transform var(--dur-reveal) var(--ease-out);
+  }
+  [data-js] .reveal.reveal-fade {
+    transform: none;
+  }
+  [data-js] .reveal.reveal-scale {
+    transform: scale(0.96);
+  }
+  [data-js] .reveal[data-inview] {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── Stagger: children of a revealed .stagger enter one after another ──── */
+  [data-js] .stagger > * {
+    opacity: 0;
+    transform: translate3d(0, 22px, 0);
+    transition:
+      opacity var(--dur-reveal) var(--ease-out),
+      transform var(--dur-reveal) var(--ease-out);
+    transition-delay: calc(var(--i, 0) * var(--stagger-base));
+  }
+  [data-js] .stagger[data-inview] > * {
+    opacity: 1;
+    transform: none;
+  }
+  .stagger > :nth-child(2) { --i: 1; }
+  .stagger > :nth-child(3) { --i: 2; }
+  .stagger > :nth-child(4) { --i: 3; }
+  .stagger > :nth-child(5) { --i: 4; }
+  .stagger > :nth-child(6) { --i: 5; }
+  .stagger > :nth-child(7) { --i: 6; }
+  .stagger > :nth-child(8) { --i: 7; }
+  .stagger > :nth-child(n + 9) { --i: 8; }
+
+  /* ── PageIntro: CSS-only entrance sequence, runs before hydration ───────── */
+  .intro > [data-intro],
+  .intro [data-intro] {
+    animation: intro-rise var(--dur-slow) var(--ease-out) both;
+    animation-delay: calc(var(--d, 0) * var(--stagger-loose) + 80ms);
+  }
+  .intro [data-intro="fade"] {
+    animation-name: intro-fade;
+  }
+  .intro [data-intro="settle"] {
+    animation: intro-settle var(--dur-ceremony) var(--ease-out) both;
+    animation-delay: calc(var(--d, 0) * var(--stagger-loose) + 80ms);
+  }
+
+  /* ── Star divider: hairlines grow from the centre, star turns into place ── */
+  .star-divider .divider-line {
+    transition: transform var(--dur-reveal) var(--ease-out);
+  }
+  .star-divider .divider-line:first-child {
+    transform-origin: right center;
+  }
+  .star-divider .divider-line:last-child {
+    transform-origin: left center;
+  }
+  .star-divider .divider-star {
+    transition:
+      transform var(--dur-reveal) var(--ease-bounce),
+      opacity var(--dur-base) var(--ease-out);
+  }
+  [data-js] .star-divider:not([data-inview]) .divider-line {
+    transform: scaleX(0);
+  }
+  [data-js] .star-divider:not([data-inview]) .divider-star {
+    transform: rotate(-135deg) scale(0.4);
+    opacity: 0;
+  }
+  [data-js] .star-divider[data-inview] .divider-star {
+    transition-delay: 180ms;
+  }
+
+  /* ── Tactile buttons ────────────────────────────────────────────────────── */
+  .btn-tactile {
+    position: relative;
+    isolation: isolate;
+    transition: transform var(--dur-fast) var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  /* Soft lift shadow lives on a pseudo-element so only its opacity animates. */
+  .btn-tactile::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    box-shadow: 0 10px 24px -10px color-mix(in srgb, var(--color-emerald-deep) 55%, transparent);
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-out);
+    pointer-events: none;
+  }
+  /* Light sweep across gold surfaces. */
+  .btn-tactile.btn-gold-surface {
+    overflow: hidden;
+  }
+  .btn-tactile.btn-gold-surface::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    background: linear-gradient(
+      105deg,
+      transparent 30%,
+      color-mix(in srgb, var(--color-ivory) 45%, transparent) 50%,
+      transparent 70%
+    );
+    transform: translateX(-110%);
+    transition: transform var(--dur-slow) var(--ease-out);
+    pointer-events: none;
+  }
+  .btn-tactile .btn-arrow {
+    display: inline-block;
+    transition: transform var(--dur-base) var(--ease-bounce);
+  }
+  @media (hover: hover) {
+    .btn-tactile:hover {
+      transform: translateY(var(--lift));
+    }
+    .btn-tactile:hover::after {
+      opacity: 1;
+    }
+    .btn-tactile.btn-gold-surface:hover::before {
+      transform: translateX(110%);
+    }
+    .btn-tactile:hover .btn-arrow {
+      transform: translateX(4px);
+    }
+  }
+  .btn-tactile:focus-visible .btn-arrow {
+    transform: translateX(4px);
+  }
+  .btn-tactile:active:not(:disabled) {
+    transform: translateY(0) scale(0.97);
+    transition-duration: var(--dur-instant);
+  }
+  .btn-tactile:disabled {
+    transform: none;
+  }
+
+  /* ── Hover lift (cards, tiles) — with a press equivalent for touch ──────── */
+  .hover-lift {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  @media (hover: hover) {
+    .hover-lift:hover {
+      transform: translateY(-4px);
+    }
+  }
+  .hover-lift:focus-within {
+    transform: translateY(-4px);
+  }
+  .hover-lift:active {
+    transform: translateY(-1px) scale(0.985);
+    transition-duration: var(--dur-instant);
+  }
+
+  /* ── Gold link underline that grows from the centre ─────────────────────── */
+  .link-gold {
+    position: relative;
+    text-decoration: none;
+  }
+  .link-gold::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.35em;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .link-gold.link-gold-accent::after {
+    background: var(--color-gold);
+  }
+  @media (hover: hover) {
+    .link-gold:hover::after {
+      transform: scaleX(1);
+    }
+  }
+  .link-gold:focus-visible::after,
+  .link-gold[aria-current="page"]::after {
+    transform: scaleX(1);
+  }
+  /* Inline links inside running text: always underlined (not colour alone), gold on hover. */
+  .link-inline {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 4px;
+    text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+    transition: text-decoration-color var(--dur-fast) var(--ease-out);
+  }
+  .link-inline:hover {
+    text-decoration-color: var(--color-gold);
+  }
+
+  /* ── Number roll (AnimatedCounter, quantity) ────────────────────────────── */
+  .num-roll-up {
+    animation: num-up var(--dur-base) var(--ease-out);
+  }
+  .num-roll-down {
+    animation: num-down var(--dur-base) var(--ease-out);
+  }
+  .bump {
+    animation: bump var(--dur-slow) var(--ease-bounce);
+  }
+
+  /* ── Gold shimmer (motifs, skeletons) ───────────────────────────────────── */
+  .shimmer {
+    position: relative;
+    overflow: hidden;
+  }
+  .shimmer::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      transparent 20%,
+      color-mix(in srgb, var(--color-gold) 22%, transparent) 50%,
+      transparent 80%
+    );
+    transform: translateX(-100%);
+    animation: shimmer-sweep 1.8s var(--ease-in-out) infinite;
+  }
+  .motif-glint {
+    animation: glint 7s var(--ease-in-out) infinite;
+  }
+  .motif-float {
+    animation: float 9s var(--ease-in-out) infinite;
+  }
+
+  /* Cards entering a list (drawer items, etc.) */
+  .enter-list > * {
+    animation: intro-rise var(--dur-slow) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * var(--stagger-tight) + 120ms);
+  }
+  .enter-list > :nth-child(2) { --i: 1; }
+  .enter-list > :nth-child(3) { --i: 2; }
+  .enter-list > :nth-child(4) { --i: 3; }
+  .enter-list > :nth-child(5) { --i: 4; }
+  .enter-list > :nth-child(n + 6) { --i: 5; }
+
+  /* ── Slide-in sheets (native <dialog>) ──────────────────────────────────── */
+  dialog.sheet {
+    transition:
+      transform var(--dur-slow) var(--ease-spring),
+      overlay var(--dur-slow) allow-discrete,
+      display var(--dur-slow) allow-discrete;
+  }
+  dialog.sheet::backdrop {
+    opacity: 1;
+    transition:
+      opacity var(--dur-base) var(--ease-out),
+      overlay var(--dur-base) allow-discrete,
+      display var(--dur-base) allow-discrete;
+  }
+  dialog.sheet:not([open]) {
+    transform: var(--sheet-from);
+  }
+  dialog.sheet:not([open])::backdrop {
+    opacity: 0;
+  }
+  @starting-style {
+    dialog.sheet[open] {
+      transform: var(--sheet-from);
+    }
+    dialog.sheet[open]::backdrop {
+      opacity: 0;
+    }
+  }
+}
+
+@keyframes intro-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes intro-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes intro-settle {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0) scale(0.94) rotate(-1.5deg);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes num-up {
+  from {
+    opacity: 0;
+    transform: translateY(60%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes num-down {
+  from {
+    opacity: 0;
+    transform: translateY(-60%);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.35);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes shimmer-sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes glint {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0) rotate(6deg);
+  }
+}
+@keyframes gentle-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+}
+@keyframes slot-glow {
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+/* ─── Reduced motion: no movement, no loops; state changes are instant ─────── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0ms !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  [data-js] .reveal,
+  [data-js] .stagger > *,
+  [data-js] .star-divider:not([data-inview]) .divider-line,
+  [data-js] .star-divider:not([data-inview]) .divider-star {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .shimmer::after,
+  .motif-glint,
+  .motif-float {
+    animation: none !important;
   }
 }

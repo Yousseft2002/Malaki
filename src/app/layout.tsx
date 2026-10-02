@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Jost, Playfair_Display } from "next/font/google";
 import { Analytics } from "@/components/layout/analytics";
+import { JsGate } from "@/components/motion/js-gate";
+import { MotionProvider } from "@/components/motion/motion-provider";
 import { SITE_URL } from "@/lib/store-config";
 import "./globals.css";
 
@@ -20,9 +22,12 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${jost.variable}`}>
+    <html lang="en" className={`${playfair.variable} ${jost.variable}`} suppressHydrationWarning>
+      <head>
+        <JsGate />
+      </head>
       <body className="min-h-dvh">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         <Analytics />
       </body>
     </html>
