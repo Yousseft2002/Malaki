@@ -47,6 +47,7 @@ export async function getSalesAnalytics(range: Range) {
   const current = salesByDay(sales, p.current, timeZone);
   const previous = salesByDay(sales, p.previous, timeZone);
   const inCurrent = new Set(p.current);
+  const inPrevious = new Set(p.previous);
   const currentSales = sales.filter((o) => inCurrent.has(todayIn(timeZone, o.paidAt)));
   const currentItems = items.filter((i) => inCurrent.has(todayIn(timeZone, i.order.paidAt!)));
 
@@ -58,6 +59,9 @@ export async function getSalesAnalytics(range: Range) {
     campaigns: revenueByCampaign(currentSales),
     /** Revenue from orders that arrived through a tagged ad link (any utm_campaign). */
     adRevenueCents: currentSales.filter((o) => o.utmCampaign).reduce((s, o) => s + o.totalCents, 0),
+    previousAdRevenueCents: sales
+      .filter((o) => o.utmCampaign && inPrevious.has(todayIn(timeZone, o.paidAt)))
+      .reduce((s, o) => s + o.totalCents, 0),
   };
 }
 
