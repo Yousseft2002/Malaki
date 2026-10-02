@@ -1,0 +1,315 @@
+// MALAKI data model.
+// Money is stored as integer minor units (e.g. cents) in the store currency.
+// A null price means "not yet set by the owner": the storefront shows [PRICE]
+// and the item cannot be purchased until a price is entered in the admin.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Catalogue ──────────────────────────────────────────────────────────────
+
+model Collection {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  name        String
+  tagline     String?
+  description String?
+  imageLabel  String? // label for the image placeholder until real photography exists
+  sortOrder   Int       @default(0)
+  isActive    Boolean   @default(true)
+  products    Product[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+enum ProductKind {
+  STANDARD
+  CUSTOM_BOX // "Build your own box": variants are box sizes, contents chosen from BoxItem
+}
+
+model Product {
+  id           String         @id @default(cuid())
+  slug         String         @unique
+  name         String
+  kind         ProductKind    @default(STANDARD)
+  tagline      String?
+  description  String?
+  contents     String? // "What's inside"
+  ingredients  String?
+  allergens    String?
+  storage      String?
+  shippingInfo String?
+  isPerishable Boolean        @default(true)
+  isActive     Boolean        @default(true)
+  isSignature  Boolean        @default(false) // shown in the homepage signature grid
+  sortOrder    Int            @default(0)
+  collectionId String?
+  collection   Collection?    @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  images       ProductImage[]
+  variants     Variant[]
+  pairsWith    Product[]      @relation("Pairings")
+  pairedFrom   Product[]      @relation("Pairings")
+  orderItems   OrderItem[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  @@index([collectionId])
+}
+
+model ProductImage {
+  id        String  @id @default(cuid())
+  productId String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  url       String? // null → labelled placeholder is rendered
+  alt       String
+  sortOrder Int     @default(0)
+
+  @@index([productId])
+}
+
+// A purchasable option of a product. For gift boxes this is the box size.
+model Variant {
+  id           String      @id @default(cuid())
+  productId    String
+  product      Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name         String // e.g. "Box of 12"
+  sku          String      @unique
+  priceCents   Int?
+  stock        Int         @default(0)
+  boxCapacity  Int? // CUSTOM_BOX only: number of pieces the box holds
+  isActive     Boolean     @default(true)
+  sortOrder    Int         @default(0)
+  // CUSTOM_BOX only: items allowed in this box size. Empty = every active BoxItem.
+  allowedItems BoxItem[]   @relation("BoxItemEligibility")
+  orderItems   OrderItem[]
+
+  @@index([productId])
+}
+
+// A piece that can go into a build-your-own box.
+model BoxItem {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  name          String
+  description   String?
+  allergens     String?
+  imageLabel    String?
+  priceCents    Int? // per-piece price added on top of the box price
+  stock         Int       @default(0)
+  maxPerBox     Int? // optional cap on how many of this piece one box may hold
+  isActive      Boolean   @default(true)
+  sortOrder     Int       @default(0)
+  eligibleBoxes Variant[] @relation("BoxItemEligibility")
+}
+
+// ─── Customers & orders ─────────────────────────────────────────────────────
+
+model Customer {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  phone     String?
+  orders    Order[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OrderStatus {
+  PENDING_PAYMENT
+  PAID
+  PACKED
+  SHIPPED
+  CANCELLED
+}
+
+enum FulfilmentMethod {
+  DELIVERY
+  PICKUP
+}
+
+model Order {
+  id                      String           @id @default(cuid())
+  number                  String           @unique // human-friendly, e.g. MLK-7F3K2Q
+  status                  OrderStatus      @default(PENDING_PAYMENT)
+  customerId              String
+  customer                Customer         @relation(fields: [customerId], references: [id])
+  // Buyer
+  buyerName               String
+  buyerEmail              String
+  buyerPhone              String?
+  // Fulfilment
+  fulfilment              FulfilmentMethod
+  shippingRuleId          String?
+  shippingRule            ShippingRule?    @relation(fields: [shippingRuleId], references: [id], onDelete: SetNull)
+  shippingRuleName        String // snapshot
+  dispatchDate            DateTime         @db.Date // production / dispatch day (counts against capacity)
+  // Recipient address (null for pickup)
+  addressLine1            String?
+  addressLine2            String?
+  city                    String?
+  region                  String?
+  postalCode              String?
+  country                 String? // ISO 3166-1 alpha-2
+  // Money (minor units)
+  currency                String
+  subtotalCents           Int
+  giftWrapCents           Int              @default(0)
+  shippingCents           Int
+  totalCents              Int
+  capacityUnits           Int // production units this order consumes on dispatchDate
+  // Stripe
+  stripeCheckoutSessionId String?          @unique
+  stripePaymentIntentId   String?
+  // Lifecycle
+  paidAt                  DateTime?
+  packedAt                DateTime?
+  shippedAt               DateTime?
+  cancelledAt             DateTime?
+  confirmationEmailAt     DateTime?
+  stockIssue              Boolean          @default(false) // set if stock ran out between checkout and payment
+  adminNote               String?
+  items                   OrderItem[]
+  giftOptions             GiftOptions?
+  createdAt               DateTime         @default(now())
+  updatedAt               DateTime         @updatedAt
+
+  @@index([status])
+  @@index([dispatchDate])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id             String   @id @default(cuid())
+  orderId        String
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId      String?
+  product        Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variantId      String?
+  variant        Variant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+  productName    String // snapshot
+  variantName    String // snapshot
+  unitPriceCents Int
+  quantity       Int
+  lineTotalCents Int
+  giftWrap       Boolean  @default(false)
+  giftNote       String?
+  // CUSTOM_BOX only: [{ boxItemId, name, quantity, unitPriceCents }]
+  boxContents    Json?
+
+  @@index([orderId])
+}
+
+// Order-level gift details captured at checkout.
+model GiftOptions {
+  id             String    @id @default(cuid())
+  orderId        String    @unique
+  order          Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  giftWrap       Boolean   @default(false)
+  note           String? // max 200 chars, validated in the app
+  recipientName  String
+  recipientPhone String?
+  deliveryDate   DateTime? @db.Date // requested delivery (or pickup) date
+}
+
+// ─── Shipping & production ──────────────────────────────────────────────────
+
+enum ShippingPricing {
+  FLAT // always flatRateCents
+  THRESHOLD // flatRateCents, or free once the subtotal reaches freeOverCents
+}
+
+model ShippingRule {
+  id                 String           @id @default(cuid())
+  name               String
+  description        String?
+  method             FulfilmentMethod
+  countries          String[] // ISO alpha-2; empty = any country (pickup)
+  postcodePrefixes   String[] // optional narrowing, e.g. local delivery zones
+  pricing            ShippingPricing  @default(FLAT)
+  flatRateCents      Int? // null = price not set → rule unavailable at checkout
+  freeOverCents      Int?
+  // Weekdays (0 = Sunday … 6 = Saturday) on which PERISHABLE orders may be dispatched.
+  perishableShipDays Int[]
+  // Weekdays on which non-perishable orders may be dispatched.
+  shipDays           Int[]
+  transitDays        Int              @default(0) // dispatch → delivery
+  leadTimeDays       Int              @default(1) // minimum days between order and dispatch
+  maxDaysAhead       Int              @default(60) // how far ahead a date may be requested
+  pickupInstructions String?
+  isActive           Boolean          @default(true)
+  sortOrder          Int              @default(0)
+  orders             Order[]
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+}
+
+// Per-date override of the default daily production capacity (StoreSettings).
+// capacityUnits = 0 closes the day.
+model ProductionCapacity {
+  id            String   @id @default(cuid())
+  date          DateTime @unique @db.Date
+  capacityUnits Int
+  note          String?
+}
+
+// Singleton row (id = "store") for owner-editable settings.
+model StoreSettings {
+  id                   String  @id @default("store")
+  defaultDailyCapacity Int     @default(0) // 0 = no production limit configured yet
+  giftWrapPriceCents   Int     @default(0)
+  announcement         String?
+  pickupAddress        String?
+}
+
+// ─── Enquiries, newsletter, infrastructure ─────────────────────────────────
+
+enum EnquiryType {
+  CORPORATE
+  WEDDING
+  EVENT
+  OTHER
+}
+
+enum EnquiryStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED
+}
+
+model Enquiry {
+  id        String        @id @default(cuid())
+  type      EnquiryType
+  status    EnquiryStatus @default(NEW)
+  name      String
+  email     String
+  phone     String?
+  company   String?
+  eventDate DateTime?     @db.Date
+  quantity  String? // free text estimate, e.g. "around 150 boxes"
+  budget    String?
+  message   String
+  createdAt DateTime      @default(now())
+
+  @@index([status])
+}
+
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  source         String? // e.g. "footer", "homepage"
+  consentAt      DateTime  @default(now())
+  unsubscribedAt DateTime?
+}
+
+// Stripe webhook idempotency: one row per processed event id.
+model WebhookEvent {
+  id          String   @id // Stripe event id
+  type        String
+  processedAt DateTime @default(now())
+}
