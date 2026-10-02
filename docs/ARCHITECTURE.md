@@ -38,10 +38,10 @@ src/
     admin/
       login/             admin sign-in
       (protected)/       products, box items, orders, enquiries, shipping, capacity
+    actions/             public server actions: cart quote, delivery dates, checkout, enquiry, newsletter
     api/
       stripe/webhook     Stripe webhook (raw body, signature verified)
-      delivery-dates     available dates for a cart + shipping rule
-      admin/orders.csv   CSV export (admin only)
+    admin/(protected)/orders/export   CSV export (admin only)
     sitemap.ts, robots.ts
   components/
     layout/  ui/  home/  product/  cart/  box-builder/  checkout/  forms/  admin/
@@ -55,6 +55,7 @@ src/
     db.ts env.ts logger.ts rate-limit.ts spam.ts stripe.ts money.ts
   proxy.ts               guards /admin (session cookie check)
   instrumentation.ts     server error reporting hook
+e2e/                     Playwright accessibility, 360px layout and flow checks
 docs/
   ARCHITECTURE.md  LICENSES.md
 ```
