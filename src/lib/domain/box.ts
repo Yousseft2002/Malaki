@@ -62,7 +62,7 @@ export function isItemEligible(size: BoxSize, itemId: string): boolean {
   return size.allowedItemIds.length === 0 || size.allowedItemIds.includes(itemId);
 }
 
-export function eligiblePieces(size: BoxSize, pieces: BoxPiece[]): BoxPiece[] {
+export function eligiblePieces<T extends BoxPiece>(size: BoxSize, pieces: T[]): T[] {
   return pieces.filter((p) => p.isActive && isItemEligible(size, p.id));
 }
 

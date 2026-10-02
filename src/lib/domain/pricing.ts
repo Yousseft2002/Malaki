@@ -50,6 +50,8 @@ export interface PricedBoxPiece {
 }
 
 export interface PricedLine {
+  /** index of the input cart line */
+  lineIndex: number;
   variantId: string;
   productId: string;
   productName: string;
@@ -176,6 +178,7 @@ export function priceCart(lines: CartLine[], catalog: Catalog, options: PricingO
     }
 
     priced.push({
+      lineIndex: i,
       variantId: variant.id,
       productId: variant.productId,
       productName: variant.productName,
