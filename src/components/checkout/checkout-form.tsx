@@ -330,11 +330,11 @@ export function CheckoutForm({
             />
             <span>
               I agree to the{" "}
-              <Link href="/legal/terms" className="underline underline-offset-4" target="_blank">
+              <Link href="/legal/terms" className="link-inline" target="_blank">
                 terms &amp; conditions
               </Link>{" "}
               and have read the{" "}
-              <Link href="/legal/allergens" className="underline underline-offset-4" target="_blank">
+              <Link href="/legal/allergens" className="link-inline" target="_blank">
                 allergen information
               </Link>
               .

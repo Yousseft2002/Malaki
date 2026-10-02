@@ -4,7 +4,7 @@ import { MobileMenu } from "./mobile-menu";
 import { MAIN_LINKS, SHOP_LINKS } from "./nav-links";
 
 const linkClass =
-  "eyebrow inline-flex min-h-11 min-w-11 items-center justify-center text-ivory/90 transition-colors hover:text-gold focus-visible:text-gold";
+  "eyebrow inline-flex min-h-11 min-w-11 items-center justify-center text-ivory/90 transition-colors hover:text-gold focus-visible:text-gold link-gold link-gold-accent [--underline-offset:11px]";
 
 export function Header() {
   return (

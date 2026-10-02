@@ -5,6 +5,7 @@ import { Price } from "@/components/ui/price";
 import { CloseButton, Sheet } from "@/components/ui/sheet";
 import { cartDrawer, useCartDrawer } from "@/lib/cart/drawer";
 import { useCart } from "@/lib/cart/store";
+import { AnimatedCartList } from "./animated-cart-list";
 import { CartLineItem } from "./cart-line";
 
 export function CartDrawer() {
@@ -27,13 +28,11 @@ export function CartDrawer() {
         </div>
       ) : (
         <>
-          <ul className="flex-1 divide-y divide-sand overflow-y-auto px-5">
-            {items.map((item) => (
-              <li key={item.id}>
-                <CartLineItem item={item} compact />
-              </li>
-            ))}
-          </ul>
+          <AnimatedCartList
+            items={items}
+            className="flex-1 divide-y divide-sand overflow-x-hidden overflow-y-auto px-5"
+            renderItem={(item) => <CartLineItem item={item} compact />}
+          />
           <div className="border-t border-sand px-5 py-5">
             <div className="mb-1 flex items-baseline justify-between">
               <span className="eyebrow text-emerald">Subtotal</span>
@@ -41,7 +40,7 @@ export function CartDrawer() {
             </div>
             <p className="mb-4 text-sm text-muted">Delivery and gift wrapping are calculated at checkout.</p>
             <div className="grid gap-3">
-              <ButtonLink href="/checkout" onClick={cartDrawer.close}>
+              <ButtonLink href="/checkout" onClick={cartDrawer.close} arrow className="min-h-12">
                 Checkout
               </ButtonLink>
               <ButtonLink href="/cart" variant="outline" onClick={cartDrawer.close}>

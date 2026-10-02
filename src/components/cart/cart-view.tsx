@@ -3,6 +3,7 @@
 import { ButtonLink } from "@/components/ui/button";
 import { Price } from "@/components/ui/price";
 import { useCartQuote } from "@/lib/cart/use-cart-quote";
+import { AnimatedCartList } from "./animated-cart-list";
 import { CartLineItem } from "./cart-line";
 
 export function CartView() {
@@ -23,18 +24,20 @@ export function CartView() {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[2fr_1fr]">
-      <ul className="divide-y divide-sand border-y border-sand">
-        {items.map((item, i) => (
-          <li key={item.id}>
+      <AnimatedCartList
+        items={items}
+        className="divide-y divide-sand overflow-x-hidden border-y border-sand"
+        renderItem={(item, i) => (
+          <>
             <CartLineItem item={item} />
             {quote?.lineErrors[i]?.map((msg) => (
               <p key={msg} role="alert" className="-mt-2 pb-4 text-sm text-error">
                 {msg}
               </p>
             ))}
-          </li>
-        ))}
-      </ul>
+          </>
+        )}
+      />
 
       <aside aria-labelledby="summary-title" className="h-fit bg-sand p-6">
         <h2 id="summary-title" className="eyebrow mb-5 text-emerald">
@@ -64,7 +67,7 @@ export function CartView() {
             Checkout
           </span>
         ) : (
-          <ButtonLink href="/checkout" className="mt-6 w-full">
+          <ButtonLink href="/checkout" className="mt-6 w-full" arrow>
             Checkout
           </ButtonLink>
         )}

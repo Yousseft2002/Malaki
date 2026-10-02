@@ -316,7 +316,7 @@
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0.35em;
+    bottom: var(--underline-offset, 0.1em);
     height: 1px;
     background: currentColor;
     transform: scaleX(0);
