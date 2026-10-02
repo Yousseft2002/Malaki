@@ -173,6 +173,11 @@ model Order {
   cancelledAt             DateTime?
   confirmationEmailAt     DateTime?
   stockIssue              Boolean          @default(false) // set if stock ran out between checkout and payment
+  // Ad attribution, from the first-party cookie set on the buyer's first ad-tagged visit
+  utmSource               String?
+  utmMedium               String?
+  utmCampaign             String?
+  fbclid                  String?
   adminNote               String?
   items                   OrderItem[]
   giftOptions             GiftOptions?
@@ -182,6 +187,7 @@ model Order {
   @@index([status])
   @@index([dispatchDate])
   @@index([createdAt])
+  @@index([paidAt])
 }
 
 model OrderItem {
@@ -312,4 +318,21 @@ model WebhookEvent {
   id          String   @id // Stripe event id
   type        String
   processedAt DateTime @default(now())
+}
+
+// First-party page views for the admin analytics. No raw IP, no cookies:
+// visitorHash = SHA-256(daily salt + IP + user agent), so a visitor can only be
+// counted as unique within one day. Rows older than 13 months can be deleted.
+model PageView {
+  id          String   @id @default(cuid())
+  path        String
+  referrer    String? // host only, e.g. "l.instagram.com"
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  visitorHash String
+  isMobile    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([createdAt])
 }

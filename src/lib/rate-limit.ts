@@ -55,6 +55,8 @@ export const LIMITS = {
   newsletter: { limit: 5, windowMs: 60 * 60 * 1000 },
   checkout: { limit: 20, windowMs: 10 * 60 * 1000 },
   adminLogin: { limit: 5, windowMs: 15 * 60 * 1000 },
+  // Page-view beacons: generous (a shopper browses many pages), but caps floods.
+  track: { limit: 120, windowMs: 10 * 60 * 1000 },
 } satisfies Record<string, RateLimitRule>;
 
 /** Best-effort client IP. Only trust X-Forwarded-For behind a proxy you control. */
