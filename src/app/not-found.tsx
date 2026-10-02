@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <div className="flex min-h-dvh flex-col">
       <header className="bg-emerald py-5 text-center">
-        <Link href="/" className="wordmark text-2xl text-gold">
+        <Link href="/" className="wordmark inline-flex min-h-11 items-center text-2xl text-gold">
           Malaki
         </Link>
       </header>

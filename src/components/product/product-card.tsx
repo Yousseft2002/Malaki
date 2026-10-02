@@ -17,7 +17,7 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
         {product.collectionName && <p className="eyebrow mb-2 text-gold-ink">{product.collectionName}</p>}
         <Heading className="font-display text-xl text-emerald">
           {/* Stretched link: the whole card is clickable, with one accessible link. */}
-          <Link href={`/products/${product.slug}`} className="after:absolute after:inset-0">
+          <Link href={`/products/${product.slug}`} data-stretched className="after:absolute after:inset-0">
             {product.name}
           </Link>
         </Heading>

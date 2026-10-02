@@ -87,7 +87,8 @@ export function BoxBuilder({
       giftNote: giftNote.trim() || undefined,
       box: {
         selection: contents,
-        summary: Object.entries(contents).map(([itemId, qty]) => `${qty} × ${byId.get(itemId)?.name ?? "piece"}`),
+        // In the same order as the pieces are listed in the builder.
+        summary: pieces.filter((p) => contents[p.id]).map((p) => `${contents[p.id]} × ${p.name}`),
       },
     });
     setSelection({});
