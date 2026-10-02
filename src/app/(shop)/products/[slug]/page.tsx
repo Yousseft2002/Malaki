@@ -4,6 +4,7 @@ import { Gallery } from "@/components/product/gallery";
 import { ProductGrid } from "@/components/product/product-card";
 import { PurchasePanel } from "@/components/product/purchase-panel";
 import { AccordionItem } from "@/components/ui/accordion";
+import { PageIntro, introStep } from "@/components/motion/page-intro";
 import { Breadcrumbs } from "@/components/ui/breadcrumbs";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { StarDivider } from "@/components/ui/star";
@@ -43,23 +44,39 @@ export default async function ProductPage({ params }: Props) {
           ]}
         />
 
-        <div className="mt-6 grid gap-10 md:grid-cols-2 lg:gap-16">
-          <Gallery images={product.images} productName={product.name} />
+        {/* Mobile: gallery → purchase → details. Desktop: gallery + details left, sticky purchase panel right. */}
+        <div className="mt-6 grid gap-10 [grid-template-areas:'gallery'_'panel'_'details'] md:grid-cols-[1.15fr_1fr] md:[grid-template-areas:'gallery_panel'_'details_panel'] lg:gap-x-16">
+          <div className="[grid-area:gallery]">
+            <Gallery images={product.images} productName={product.name} />
+          </div>
 
-          <div>
-            {product.collection && <p className="eyebrow mb-3 text-gold-ink">{product.collection.name}</p>}
-            <h1 className="text-4xl text-emerald sm:text-5xl">{product.name}</h1>
-            {product.tagline && <p className="mt-3 text-lg text-muted">{product.tagline}</p>}
+          <div className="[grid-area:panel] md:sticky md:top-24 md:self-start">
+            <PageIntro>
+              {product.collection && (
+                <p className="eyebrow mb-3 text-gold-ink" {...introStep(0)}>
+                  {product.collection.name}
+                </p>
+              )}
+              <h1 className="text-4xl leading-[1.05] text-emerald sm:text-5xl lg:text-6xl" {...introStep(1)}>
+                {product.name}
+              </h1>
+              {product.tagline && (
+                <p className="mt-3 text-lg text-muted" {...introStep(2)}>
+                  {product.tagline}
+                </p>
+              )}
+            </PageIntro>
             <StarDivider tone="ink" align="start" className="my-7" />
-            {product.description && <p className="mb-8 whitespace-pre-line text-muted">{product.description}</p>}
-
             <PurchasePanel
               product={{ slug: product.slug, name: product.name, image: firstImage }}
               variants={product.variants.map((v) => ({ id: v.id, name: v.name, priceCents: v.priceCents, stock: v.stock }))}
               giftWrapPriceCents={settings.giftWrapPriceCents}
             />
+          </div>
 
-            <div className="mt-8 border-t border-sand">
+          <div className="[grid-area:details]">
+            {product.description && <p className="mb-8 text-lg leading-relaxed whitespace-pre-line text-muted">{product.description}</p>}
+            <div className="border-t border-hairline">
               <AccordionItem title="What's inside">{product.contents ?? "[CONTENTS]"}</AccordionItem>
               <AccordionItem title="Ingredients & allergens">
                 {product.ingredients ?? "[INGREDIENTS]"}
@@ -75,7 +92,7 @@ export default async function ProductPage({ params }: Props) {
       </div>
 
       {product.pairsWith.length > 0 && (
-        <section aria-labelledby="pairs-title" className="border-t border-sand bg-ivory py-16 md:py-24">
+        <section aria-labelledby="pairs-title" className="mt-16 border-t border-hairline bg-sand/40 py-16 md:py-24">
           <div className="container-page">
             <SectionHeading id="pairs-title" eyebrow="Complete the gift" title="Pairs well with" />
             <div className="mt-12">

@@ -607,3 +607,28 @@
     animation: none !important;
   }
 }
+
+/* ─── Accordions: smooth open where supported, content always eases in ───── */
+@layer components {
+  .accordion {
+    interpolate-size: allow-keywords;
+  }
+  .accordion::details-content {
+    height: 0;
+    overflow: clip;
+    transition:
+      height var(--dur-slow) var(--ease-out),
+      content-visibility var(--dur-slow) allow-discrete;
+  }
+  .accordion[open]::details-content {
+    height: auto;
+  }
+  .accordion[open] .accordion-body {
+    animation: intro-rise var(--dur-slow) var(--ease-out) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .accordion::details-content {
+    transition: none;
+  }
+}

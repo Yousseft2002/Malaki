@@ -11,8 +11,8 @@ const FROM: Record<"left" | "right" | "bottom", string> = {
 // Each side extends 24px past the screen edge (with matching padding) so the
 // spring's small overshoot never reveals a gap.
 const PLACEMENT: Record<"left" | "right" | "bottom", string> = {
-  left: "inset-y-0 left-0 mr-auto -ml-6 pl-6 h-dvh max-h-dvh w-[calc(min(26rem,100vw)+1.5rem)]",
-  right: "inset-y-0 right-0 left-auto ml-auto -mr-6 pr-6 h-dvh max-h-dvh w-[calc(min(26rem,100vw)+1.5rem)]",
+  left: "inset-y-0 left-0 mr-auto -ml-6 pl-6 h-dvh max-h-dvh max-w-none w-[calc(min(26rem,100vw)+1.5rem)]",
+  right: "inset-y-0 right-0 left-auto ml-auto -mr-6 pr-6 h-dvh max-h-dvh max-w-none w-[calc(min(26rem,100vw)+1.5rem)]",
   bottom: "inset-x-0 bottom-0 top-auto mt-auto -mb-6 pb-6 w-full max-w-none max-h-[calc(88dvh+1.5rem)]",
 };
 

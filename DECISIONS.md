@@ -21,3 +21,15 @@ Choices made without asking, during the solo run. ★ = would like the owner's i
    makes no claims.
 8. ★ **Gifting tiles now link to the enquiry form with the type preselected** (Weddings / Events /
    Corporate).
+9. **Add-to-bag sequence waits for the flight.** The item is added when the gold piece lands
+   (~0.65s) so the count bump and drawer follow the animation; instant under reduced motion. The
+   role="status" message is unchanged.
+10. **Add-to-bag button shows the line total** ("Add to bag | $2.00") so it reads as the page's main
+    action. Prices still come from the server when the cart is quoted.
+11. **Product "Available" label** reflects stock > 0 only — no stock counts or scarcity claims.
+12. ★ **Gift-wrap description** is a placeholder (`[GIFT WRAP DESCRIPTION]`) shown when wrapping is
+    free — I didn't want to invent what the wrapping looks like.
+13. **Accordions animate to `height: auto`** with `::details-content` + `interpolate-size` where the
+    browser supports it (Chrome/Edge today); elsewhere they open instantly, and the content always
+    fades/rises in. This is the one place height animates, because opening a section must push the
+    content below it down.

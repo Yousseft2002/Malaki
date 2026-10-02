@@ -60,10 +60,18 @@ export function ProductCard({ product, headingLevel = "h3" }: { product: Product
   );
 }
 
+// Short rows are centred instead of hugging the left of a 4-column grid.
+const COLS: Record<number, string> = {
+  1: "mx-auto max-w-sm min-[480px]:grid-cols-1",
+  2: "mx-auto max-w-3xl",
+  3: "lg:grid-cols-3",
+  4: "lg:grid-cols-4",
+};
+
 export function ProductGrid({ products, headingLevel }: { products: ProductCardData[]; headingLevel?: "h2" | "h3" }) {
   if (products.length === 0) return <p className="text-center text-muted">New pieces are coming soon.</p>;
   return (
-    <Stagger as="ul" className="grid grid-cols-1 gap-x-6 gap-y-14 min-[480px]:grid-cols-2 lg:grid-cols-4">
+    <Stagger as="ul" className={`grid grid-cols-1 gap-x-6 gap-y-14 min-[480px]:grid-cols-2 ${COLS[Math.min(products.length, 4)]}`}>
       {products.map((p) => (
         <li key={p.slug}>
           <ProductCard product={p} headingLevel={headingLevel} />
