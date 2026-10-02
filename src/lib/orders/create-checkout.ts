@@ -11,6 +11,7 @@ import { getStoreSettings, loadPricingCatalog } from "@/lib/queries/catalog";
 import { getActiveShippingRules, loadCapacityInputs } from "@/lib/queries/shipping";
 import { SITE_URL, STORE_CURRENCY } from "@/lib/store-config";
 import { getStripe } from "@/lib/stripe";
+import type { Attribution } from "@/lib/analytics/track";
 import type { CartLineInput, CheckoutDetails } from "@/lib/validation/schemas";
 import { generateOrderNumber } from "./order-number";
 import { buildStripeLineItems, lineItemsTotal } from "./stripe-line-items";
@@ -36,8 +37,9 @@ class CapacityTakenError extends Error {}
  * Validate and price the cart on the server, reserve production capacity,
  * create a PENDING_PAYMENT order and a Stripe Checkout Session for it.
  * The order is only marked paid later, by the verified webhook.
+ * `attribution` (from the ad-attribution cookie) is only stored on the order.
  */
-export async function createCheckout(lines: CartLineInput[], details: CheckoutDetails): Promise<CheckoutResult> {
+export async function createCheckout(lines: CartLineInput[], details: CheckoutDetails, attribution: Attribution | null = null): Promise<CheckoutResult> {
   const config = env();
   const [catalog, settings, rules] = await Promise.all([
     loadPricingCatalog(lines.map((l) => l.variantId)),
@@ -130,6 +132,10 @@ export async function createCheckout(lines: CartLineInput[], details: CheckoutDe
             shippingCents,
             totalCents,
             capacityUnits: priced.units,
+            utmSource: attribution?.utmSource,
+            utmMedium: attribution?.utmMedium,
+            utmCampaign: attribution?.utmCampaign,
+            fbclid: attribution?.fbclid,
             items: {
               create: priced.lines.map((l) => ({
                 productId: l.productId,
