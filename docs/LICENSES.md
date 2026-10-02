@@ -16,6 +16,8 @@ were found.** Re-check after adding dependencies.
 | zod | 4.x | MIT | validation |
 | nodemailer | 10.x | MIT-0 | SMTP email |
 | server-only | — | MIT | build-time guard |
+| motion (+ framer-motion, motion-dom, motion-utils) | 13.5 | MIT | box / cart enter-exit animation |
+| tslib (via motion) | 2.8 | 0BSD | helper runtime |
 | tailwindcss, @tailwindcss/postcss | 4.x | MIT | styling (build) |
 | typescript, eslint, eslint-config-next | — | Apache-2.0 / MIT | tooling (dev) |
 | vitest, tsx, dotenv | — | MIT / MIT / BSD-2-Clause | tests & scripts (dev) |

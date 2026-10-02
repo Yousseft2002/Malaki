@@ -59,3 +59,5 @@ Choices made without asking, during the solo run. ★ = would like the owner's i
     `noindex`. Collection/product score 91 because Next.js streams `generateMetadata` output into
     `<body>` (documented Next.js 16 behaviour; Google reads the full DOM). Turning streaming off
     (`htmlLimitedBots: /.*/`) would trade speed for that score — left at the default.
+25. **/preview-screenshots is git-ignored** — the final screenshots are saved there for review but not committed (binary files would bloat the repo).
+26. **Phone testing over Wi-Fi works in dev**: `allowedDevOrigins` allows private network addresses (dev only), and the cart no longer depends on `crypto.randomUUID` (missing on plain-http LAN addresses) — a real bug found while preparing the phone link.
