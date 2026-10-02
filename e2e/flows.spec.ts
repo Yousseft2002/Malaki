@@ -21,7 +21,7 @@ test("add to bag opens the drawer and the bag persists after reload", async ({ p
   await page.getByRole("button", { name: "Add to bag" }).click();
   const drawer = page.getByRole("dialog", { name: "Shopping bag" });
   await expect(drawer).toBeVisible();
-  await expect(drawer.getByText("The Malaki Box").first()).toBeVisible();
+  await expect(drawer.getByRole("heading", { name: "The Malaki Box" })).toBeVisible();
   await expect(drawer.getByText("“Happy Eid!”")).toBeVisible();
   await page.reload();
   await expect(page.getByRole("button", { name: /Shopping bag, 1 item/ })).toBeVisible();

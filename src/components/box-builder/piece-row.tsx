@@ -22,7 +22,7 @@ export function PieceRow({
     "inline-flex h-11 w-11 items-center justify-center border border-emerald text-lg text-emerald hover:bg-emerald hover:text-ivory disabled:border-[#857a63] disabled:text-muted disabled:opacity-50 disabled:hover:bg-transparent";
   return (
     <div className="flex items-center gap-4 py-4">
-      <ImagePlaceholder label={piece.imageLabel ?? piece.name} className="h-16 w-16 shrink-0 text-[0]" />
+      <ImagePlaceholder label={piece.imageLabel ?? piece.name} className="h-16 w-16 shrink-0" />
       <div className="min-w-0 flex-1">
         <h3 className="font-display text-lg text-emerald">{piece.name}</h3>
         <p className="text-sm text-muted">
