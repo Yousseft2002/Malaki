@@ -9,10 +9,13 @@ export function ImagePlaceholder({
   label,
   className = "",
   tone = "sand",
+  frame = true,
 }: {
   label: string;
   className?: string;
   tone?: "sand" | "emerald";
+  /** Fine inner rule; turn off inside shaped masks (e.g. the story arch). */
+  frame?: boolean;
 }) {
   const colors = tone === "emerald" ? "bg-emerald-soft text-sand" : "bg-sand text-muted";
   const decorative = label === "";
@@ -24,7 +27,7 @@ export function ImagePlaceholder({
       aria-hidden={decorative ? true : undefined}
       className={`@container relative flex items-center justify-center overflow-hidden ${colors} ${className}`}
     >
-      <div className="absolute inset-3 border border-current opacity-20" aria-hidden="true" />
+      {frame && <div className="absolute inset-3 border border-current opacity-20" aria-hidden="true" />}
       <div className="flex max-w-[80%] flex-col items-center gap-3 text-center" aria-hidden="true">
         <EightPointStar className={`h-6 w-6 ${tone === "emerald" ? "text-gold" : "text-gold-ink"} opacity-60`} />
         {text && <span className="hidden text-xs leading-snug tracking-wide @[9rem]:block">{text}</span>}

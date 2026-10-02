@@ -197,6 +197,37 @@
     animation-delay: calc(var(--d, 0) * var(--stagger-loose) + 80ms);
   }
 
+  /* Intro version of the divider (hero): draws with the CSS sequence, no JS. */
+  .intro .draw-line {
+    animation: draw-out var(--dur-reveal) var(--ease-out) both;
+    animation-delay: calc(var(--d, 0) * var(--stagger-loose) + 80ms);
+  }
+  .intro .draw-line:first-child {
+    transform-origin: right center;
+  }
+  .intro .draw-line:last-child {
+    transform-origin: left center;
+  }
+  .intro .turn-star {
+    animation: turn-in var(--dur-reveal) var(--ease-bounce) both;
+    animation-delay: calc(var(--d, 0) * var(--stagger-loose) + 180ms);
+  }
+
+  /* ── Arch reveal (story): an ivory curtain lifts out of a Moroccan arch ─── */
+  .arch-reveal .arch-curtain {
+    transition: transform 1.1s var(--ease-in-out);
+  }
+  .arch-reveal .arch-image {
+    transition: transform 1.6s var(--ease-out);
+  }
+  [data-js] .arch-reveal:not([data-inview]) .arch-image {
+    transform: scale(1.12);
+  }
+  [data-js] .arch-reveal[data-inview] .arch-curtain,
+  html:not([data-js]) .arch-curtain {
+    transform: translateY(-101%);
+  }
+
   /* ── Star divider: hairlines grow from the centre, star turns into place ── */
   .star-divider .divider-line {
     transition: transform var(--dur-reveal) var(--ease-out);
@@ -452,6 +483,24 @@
     transform: none;
   }
 }
+@keyframes draw-out {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+@keyframes turn-in {
+  from {
+    opacity: 0;
+    transform: rotate(-135deg) scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 @keyframes num-up {
   from {
     opacity: 0;
@@ -538,6 +587,12 @@
     animation-delay: 0ms !important;
     transition-duration: 0.01ms !important;
     transition-delay: 0ms !important;
+  }
+  [data-js] .arch-reveal .arch-curtain {
+    transform: translateY(-101%) !important;
+  }
+  [data-js] .arch-reveal .arch-image {
+    transform: none !important;
   }
   [data-js] .reveal,
   [data-js] .stagger > *,

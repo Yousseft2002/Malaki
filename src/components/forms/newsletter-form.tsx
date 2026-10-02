@@ -43,8 +43,8 @@ export function NewsletterForm({ source = "footer", tone = "dark" }: { source?: 
         <button
           type="submit"
           disabled={pending}
-          className={`min-h-11 px-6 text-xs font-medium tracking-[0.2em] uppercase disabled:opacity-60 ${
-            dark ? "bg-gold text-emerald-deep hover:bg-gold-light" : "bg-emerald text-ivory hover:bg-emerald-deep"
+          className={`btn-tactile min-h-11 px-6 text-xs font-medium tracking-[0.2em] uppercase disabled:opacity-60 ${
+            dark ? "btn-gold-surface bg-gold text-emerald-deep" : "bg-emerald text-ivory hover:bg-emerald-deep"
           }`}
         >
           {pending ? "Joining…" : "Join"}

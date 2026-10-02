@@ -11,3 +11,13 @@ Choices made without asking, during the solo run. ★ = would like the owner's i
 3. **No-JS / reduced-motion safety.** Scroll reveals only hide content once JavaScript has set
    `html[data-js]`, so content is never invisible without JS. Under `prefers-reduced-motion` reveals
    become a plain fade-free appearance and decorative loops are switched off.
+4. **Product cards fetch two images** (`take: 2` in the card query) so a second photo can be revealed
+   on hover/press. Display-only change; no commerce logic touched.
+5. **Collection cards use an overlay link.** The visible title is the one accessible link (44px
+   target); an `aria-hidden`, untabbable overlay link makes the whole card tappable. The previous
+   stretched-link version accidentally hid the caption behind the image.
+6. **Collections are "chapters"** (I, II, III) — numbering is decorative (`aria-hidden`).
+7. **Hero caption card links to The Malaki Box** (an existing product) — it names a real product,
+   makes no claims.
+8. ★ **Gifting tiles now link to the enquiry form with the type preselected** (Weddings / Events /
+   Corporate).
