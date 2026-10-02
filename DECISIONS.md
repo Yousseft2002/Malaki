@@ -43,3 +43,10 @@ Choices made without asking, during the solo run. ★ = would like the owner's i
 17. **Pulses are finite** (three gentle beats), so nothing loops forever or distracts.
 18. **Mobile box**: a pinned bar (progress stars, count, total) opens a bottom sheet with the full
     box, totals and Add to bag. Page has bottom padding so the bar never covers content.
+19. **Loading skeletons only on collection and product pages.** A skeleton boundary at the shop root
+    would leave no-JavaScript visitors looking at a skeleton (streamed content needs a tiny script to
+    swap in). Collection/product pages are where navigation waits on data, so they get the shimmer.
+20. **JS gate uses `next/script` `beforeInteractive`** (an inline `<script>` in the layout triggered a
+    React warning). It still runs before hydration.
+21. **Playwright runs with one worker** — the local Prisma dev database drops connections under
+    parallel load. Production Postgres is unaffected.

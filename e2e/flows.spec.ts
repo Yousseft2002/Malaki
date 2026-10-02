@@ -1,4 +1,10 @@
-import { expect, test } from "@playwright/test";
+import { type Page, expect, test } from "@playwright/test";
+
+/** On phones the box summary (and its Add button) lives in a bottom sheet opened from the pinned bar. */
+async function openBoxSummary(page: Page, isMobile: boolean) {
+  if (isMobile) await page.getByRole("button", { name: /View box|Review & add/ }).click();
+  return isMobile ? page.getByRole("dialog", { name: "Your box" }) : page.getByRole("complementary");
+}
 
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
@@ -35,18 +41,21 @@ test("gift note is limited to 200 characters", async ({ page }) => {
   await expect(page.getByText("0 characters left")).toBeVisible();
 });
 
-test("build your own box: must be full, then adds one configured item", async ({ page }) => {
+test("build your own box: must be full, then adds one configured item", async ({ page, isMobile }) => {
   await page.goto("/build-your-own-box");
   await page.getByText("Box of 6", { exact: true }).click();
   const addDate = page.getByRole("button", { name: "Add one Stuffed date" });
   await addDate.click();
-  await page.getByRole("button", { name: "Add box to bag" }).click();
-  await expect(page.getByText("Add 5 more pieces to complete your box.")).toBeVisible();
+  let summary = await openBoxSummary(page, isMobile);
+  await summary.getByRole("button", { name: "Add box to bag" }).click();
+  await expect(summary.getByText("Add 5 more pieces to complete your box.")).toBeVisible();
+  if (isMobile) await summary.getByRole("button", { name: "Close box" }).click();
   for (let i = 0; i < 3; i++) await addDate.click();
   for (let i = 0; i < 2; i++) await page.getByRole("button", { name: "Add one Ghriba" }).click();
-  await expect(page.getByText("6 of 6 pieces")).toBeVisible();
+  await expect(page.getByText("6 of 6 pieces").first()).toBeVisible();
   await expect(addDate).toBeDisabled(); // box is full
-  await page.getByRole("button", { name: "Add box to bag" }).click();
+  summary = await openBoxSummary(page, isMobile);
+  await summary.getByRole("button", { name: "Add box to bag" }).click();
   const drawer = page.getByRole("dialog", { name: "Shopping bag" });
   await expect(drawer.getByText("2 × Ghriba, 4 × Stuffed date")).toBeVisible();
 });
@@ -54,6 +63,8 @@ test("build your own box: must be full, then adds one configured item", async ({
 test("checkout validates on the client before contacting Stripe", async ({ page }) => {
   await page.goto("/products/ghriba-selection");
   await page.getByRole("button", { name: "Add to bag" }).click();
+  // The item is added once the gold piece lands in the bag and the drawer opens.
+  await expect(page.getByRole("dialog", { name: "Shopping bag" })).toBeVisible();
   await page.goto("/checkout");
   await expect(page.getByRole("button", { name: "Continue to payment" })).toBeEnabled();
   await page.getByRole("button", { name: "Continue to payment" }).click();
@@ -67,4 +78,15 @@ test("enquiry form shows validation errors", async ({ page }) => {
   await page.getByRole("button", { name: "Send enquiry" }).click();
   await expect(page.getByText("Please choose an enquiry type.")).toBeVisible();
   await expect(page.getByText("Please agree so we can reply to your enquiry.")).toBeVisible();
+});
+
+test("cart drawer: removing an item animates it out and leaves the bag empty", async ({ page }) => {
+  await page.goto("/products/gazelle-horns");
+  await page.getByRole("button", { name: "Add to bag" }).click();
+  const drawer = page.getByRole("dialog", { name: "Shopping bag" });
+  await expect(drawer.getByRole("heading", { name: "Gazelle Horns" })).toBeVisible();
+  await drawer.getByRole("button", { name: /Increase quantity/ }).click();
+  await expect(page.getByRole("button", { name: /Shopping bag, 2 items/ })).toBeAttached();
+  await drawer.getByRole("button", { name: /Remove/ }).click();
+  await expect(drawer.getByText("Your bag is empty")).toBeVisible();
 });

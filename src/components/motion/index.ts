@@ -7,5 +7,5 @@ export { AnimatedCounter } from "./animated-counter";
 export { FloatingMotif } from "./floating-motif";
 export { AddToBagButton, flyToBag, BAG_ARRIVE_EVENT } from "./add-to-bag-feedback";
 export { MotionProvider } from "./motion-provider";
-export { JsGate } from "./js-gate";
+export { JS_GATE_SCRIPT } from "./js-gate";
 export { Button as InteractiveButton, ButtonLink as InteractiveLink } from "@/components/ui/button";

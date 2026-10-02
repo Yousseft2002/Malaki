@@ -44,6 +44,15 @@ for (const path of PAGES) {
   test(`${path}: no axe violations, no horizontal scroll, 44px targets`, async ({ page }) => {
     await page.goto(path);
     await page.waitForLoadState("networkidle");
+    // Scroll through so every scroll-reveal has played, as it would for a visitor.
+    await page.evaluate(async () => {
+      for (let y = 0; y < document.body.scrollHeight; y += 500) {
+        window.scrollTo({ top: y, behavior: "instant" });
+        await new Promise((r) => setTimeout(r, 40));
+      }
+      window.scrollTo({ top: 0, behavior: "instant" });
+    });
+    await page.waitForTimeout(800);
 
     const axe = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"]).analyze();
     const violations = axe.violations.map((v) => `${v.id} (${v.impact}): ${v.nodes.map((n) => n.target.join(" ")).slice(0, 4).join(" | ")}`);

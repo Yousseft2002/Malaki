@@ -42,7 +42,7 @@ export function GiftNoteCard({ note }: { note: string }) {
     <figure aria-hidden="true" className="relative mt-4 rotate-[-1.5deg] bg-ivory p-5 shadow-[0_14px_30px_-18px_var(--color-emerald-deep)] ring-1 ring-gold/30">
       <EightPointStar className="absolute top-3 right-3 h-3 w-3 text-gold" />
       <p className="eyebrow mb-2 text-[0.65rem] text-gold-ink">Your card</p>
-      <blockquote className={`min-h-12 font-display text-lg leading-snug break-words italic ${empty ? "text-muted/70" : "text-emerald"}`}>
+      <blockquote className={`min-h-12 font-display text-lg leading-snug break-words italic ${empty ? "text-muted" : "text-emerald"}`}>
         {empty ? "Your message will appear here…" : note}
       </blockquote>
       <p className="mt-3 text-right font-display text-sm text-gold-ink">— MALAKI</p>
