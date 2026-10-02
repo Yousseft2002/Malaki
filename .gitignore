@@ -27,3 +27,16 @@ Thumbs.db
 
 # Deployment
 .vercel/
+
+# Testing
+coverage/
+
+# Keys / certs
+*.pem
+
+# Generated Prisma client
+src/generated/
+
+# Playwright
+test-results/
+playwright-report/
