@@ -42,4 +42,5 @@ keyframes sequence), `AnimatedCounter`, `FloatingMotif`, `AddToBagFeedback`, `Mo
 - Box builder done (desktop sticky box + mobile pinned bar/bottom sheet, ceremony verified in browser, no console errors).
 - Delights + tests done: 60 e2e passing (a11y, layout, flows, reduced motion, no-JS, keyboard, console errors), 82 unit.
 - Review passes done (tablet nav/gallery layout, collection header band, Our Story arch reveals, empty states).
-- Next: 13 quality gate, 14 README + screenshots + handoff.
+- Lighthouse mobile (production build): home 91, collection 94, product 94, box 90, enquiries 92, story 92, cart 90, checkout 91; a11y 100 and best-practices 100 everywhere; CLS 0.
+- Next: finish 13 (full e2e on dev, secrets check), then 14.

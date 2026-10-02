@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
 import { AnimatedCounter } from "@/components/motion/animated-counter";
 import { BAG_ARRIVE_EVENT } from "@/components/motion/add-to-bag-feedback";
-import { cartDrawer } from "@/lib/cart/drawer";
+import { cartDrawer, useCartDrawer } from "@/lib/cart/drawer";
 import { useCart } from "@/lib/cart/store";
-import { CartDrawer } from "./cart-drawer";
+
+// The drawer (and the Motion library it uses) loads the first time the bag is opened.
+const CartDrawer = dynamic(() => import("./cart-drawer").then((m) => m.CartDrawer), { ssr: false });
 
 /** Restart a CSS animation class on an element. */
 function replay(el: HTMLElement | null, className: string) {
@@ -17,6 +20,9 @@ function replay(el: HTMLElement | null, className: string) {
 
 export function CartButton() {
   const { count } = useCart();
+  const drawerOpen = useCartDrawer();
+  const [drawerLoaded, setDrawerLoaded] = useState(false);
+  if (drawerOpen && !drawerLoaded) setDrawerLoaded(true);
   const badge = useRef<HTMLSpanElement>(null);
   const icon = useRef<SVGSVGElement>(null);
   const ready = useRef(false);
@@ -64,7 +70,7 @@ export function CartButton() {
           </span>
         )}
       </button>
-      <CartDrawer />
+      {drawerLoaded && <CartDrawer />}
     </>
   );
 }

@@ -1,10 +1,8 @@
 "use client";
 
-import { LayoutGroup, motion } from "motion/react";
 import { useId, useState } from "react";
 import { QuantityStepper } from "@/components/cart/quantity-stepper";
 import { AddToBagButton } from "@/components/motion/add-to-bag-feedback";
-import { spring } from "@/components/motion/tokens";
 import { money } from "@/components/ui/price";
 import { cartDrawer } from "@/lib/cart/drawer";
 import { cart } from "@/lib/cart/store";
@@ -71,20 +69,16 @@ export function PurchasePanel({
       {variants.length > 1 && (
         <fieldset>
           <legend className="eyebrow mb-3 text-emerald">Choose your box</legend>
-          <LayoutGroup id={id}>
             <div className="grid grid-cols-2 gap-3">
               {variants.map((v, i) => {
                 const selected = v.id === variantId;
                 return (
                   <label
                     key={v.id}
-                    className={`relative isolate flex min-h-24 cursor-pointer flex-col items-center justify-end gap-2 border px-3 pt-3 pb-3 text-center transition-[transform,border-color] duration-200 active:scale-[0.97] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-emerald ${
-                      selected ? "border-emerald" : "border-line hover:border-emerald"
+                    className={`relative isolate flex min-h-24 cursor-pointer flex-col items-center justify-end gap-2 border px-3 pt-3 pb-3 text-center transition-[transform,border-color,background-color] duration-300 active:scale-[0.97] has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-emerald ${
+                      selected ? "border-emerald bg-emerald" : "border-line hover:border-emerald"
                     }`}
                   >
-                    {selected && (
-                      <motion.span layoutId="variant-highlight" transition={spring.soft} className="absolute inset-0 -z-10 bg-emerald" aria-hidden="true" />
-                    )}
                     <input
                       type="radio"
                       name={`${id}-variant`}
@@ -110,7 +104,6 @@ export function PurchasePanel({
                 );
               })}
             </div>
-          </LayoutGroup>
         </fieldset>
       )}
 

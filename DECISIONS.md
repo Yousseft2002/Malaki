@@ -52,3 +52,10 @@ Choices made without asking, during the solo run. ★ = would like the owner's i
     parallel load. Production Postgres is unaffected.
 22. **Tablets (768–1023px) use the phone layouts** for the header (hamburger), product page
     (stacked, swipe gallery) and box builder (pinned bar) — the desktop versions were cramped there.
+23. **Motion loads only where it's used.** The cart drawer is loaded on first open, the product page
+    uses a CSS transition for the size highlight, and reduced-motion config sits inside each Motion
+    island instead of the root layout. This took Lighthouse mobile performance from 88–91 to 90–94.
+24. **Lighthouse SEO notes (not bugs):** cart/checkout score 63 because they are intentionally
+    `noindex`. Collection/product score 91 because Next.js streams `generateMetadata` output into
+    `<body>` (documented Next.js 16 behaviour; Google reads the full DOM). Turning streaming off
+    (`htmlLimitedBots: /.*/`) would trade speed for that score — left at the default.

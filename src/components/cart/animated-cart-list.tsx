@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { ease, stagger } from "@/components/motion/tokens";
 import type { CartItem } from "@/lib/cart/types";
 
@@ -19,6 +19,7 @@ export function AnimatedCartList({
   renderItem: (item: CartItem, index: number) => React.ReactNode;
 }) {
   return (
+    <MotionConfig reducedMotion="user">
     <ul className={className}>
       <AnimatePresence initial={true} mode="popLayout">
         {items.map((item, i) => (
@@ -34,5 +35,6 @@ export function AnimatedCartList({
         ))}
       </AnimatePresence>
     </ul>
+    </MotionConfig>
   );
 }

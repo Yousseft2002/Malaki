@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutGroup, motion } from "motion/react";
+import { LayoutGroup, MotionConfig, motion } from "motion/react";
 import { useId, useMemo, useRef, useState } from "react";
 import { QuantityStepper } from "@/components/cart/quantity-stepper";
 import { AddToBagButton } from "@/components/motion/add-to-bag-feedback";
@@ -231,6 +231,7 @@ export function BoxBuilder({
   );
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="grid gap-12 pb-28 lg:grid-cols-[1.25fr_1fr] lg:gap-16 lg:pb-0">
       {/* Screen-reader announcements for every addition, removal and completion */}
       <p className="sr-only" aria-live="polite" aria-atomic="true">
@@ -388,5 +389,6 @@ export function BoxBuilder({
         <div className="overflow-y-auto px-5 py-6">{summary("sheet")}</div>
       </Sheet>
     </div>
+    </MotionConfig>
   );
 }
