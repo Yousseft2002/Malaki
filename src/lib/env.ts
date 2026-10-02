@@ -39,9 +39,18 @@ export type Env = z.infer<typeof schema>;
 
 let cached: Env | null = null;
 
+/** Treat VAR="" (as copied from .env.example) the same as an unset variable. */
+export function withoutEmpty(source: Record<string, string | undefined>): Record<string, string> {
+  return Object.fromEntries(Object.entries(source).filter((e): e is [string, string] => typeof e[1] === "string" && e[1].trim() !== ""));
+}
+
+export function parseEnv(source: Record<string, string | undefined>) {
+  return schema.safeParse(withoutEmpty(source));
+}
+
 export function env(): Env {
   if (cached) return cached;
-  const parsed = schema.safeParse(process.env);
+  const parsed = schema.safeParse(withoutEmpty(process.env));
   if (!parsed.success) {
     const issues = parsed.error.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ");
     throw new Error(`Invalid environment configuration — ${issues}`);

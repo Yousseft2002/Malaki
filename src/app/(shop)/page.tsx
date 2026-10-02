@@ -7,11 +7,17 @@ import { StorySection } from "@/components/home/story-section";
 import { ProductGrid } from "@/components/product/product-card";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { getCollections, getSignatureProducts } from "@/lib/queries/catalog";
+import { jsonLdScript } from "@/lib/seo";
+import { SITE_URL } from "@/lib/store-config";
 
 export default async function HomePage() {
   const [collections, signature] = await Promise.all([getCollections(), getSignatureProducts()]);
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript({ "@context": "https://schema.org", "@type": "Organization", name: "MALAKI", url: SITE_URL }) }}
+      />
       <Hero />
       <CollectionsSection collections={collections} />
 
