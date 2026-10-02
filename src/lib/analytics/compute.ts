@@ -121,7 +121,7 @@ export function bestSellers(rows: ItemRow[], top = 5): { slices: Slice[]; totalC
 }
 
 /** Number of distinct product colours (see charts/palette). "Other" has its own neutral shade. */
-export const PRODUCT_SHADES = 6;
+export const SHADE_COUNT = 6;
 
 function hash(key: string): number {
   let h = 2166136261;
@@ -139,8 +139,8 @@ export function shadeIndexes(keys: string[]): Map<string, number> {
   const out = new Map<string, number>();
   const used = new Set<number>();
   for (const key of [...keys].sort()) {
-    let i = hash(key) % PRODUCT_SHADES;
-    for (let n = 0; used.has(i) && n < PRODUCT_SHADES; n++) i = (i + 1) % PRODUCT_SHADES;
+    let i = hash(key) % SHADE_COUNT;
+    for (let n = 0; used.has(i) && n < SHADE_COUNT; n++) i = (i + 1) % SHADE_COUNT;
     used.add(i);
     out.set(key, i);
   }
