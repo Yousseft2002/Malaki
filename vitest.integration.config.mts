@@ -3,6 +3,8 @@ import { defineConfig } from "vitest/config";
 
 const src = fileURLToPath(new URL("./src", import.meta.url));
 
+// Integration tests talk to the database in DATABASE_URL (loaded from .env).
+// Point it at a disposable development database, never production.
 export default defineConfig({
   resolve: {
     alias: {
@@ -12,8 +14,9 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts"],
-    // Integration tests need a database: run them with `npm run test:integration`.
-    exclude: ["src/**/*.int.test.ts", "node_modules/**"],
+    include: ["src/**/*.int.test.ts"],
+    setupFiles: ["dotenv/config"],
+    fileParallelism: false,
+    testTimeout: 30_000,
   },
 });

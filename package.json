@@ -15,7 +15,8 @@
     "db:seed": "prisma db seed",
     "db:studio": "prisma studio",
     "postinstall": "prisma generate",
-    "admin:hash": "tsx scripts/hash-password.ts"
+    "admin:hash": "tsx scripts/hash-password.ts",
+    "test:integration": "vitest run --config vitest.integration.config.mts"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.10.0",
